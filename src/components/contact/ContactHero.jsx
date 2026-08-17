@@ -7,37 +7,47 @@ import ContactMethodCards from './ContactMethodCards.jsx';
 
 export default function ContactHero() {
   return (
-    <section className="relative overflow-hidden bg-brand-bg pt-6 pb-10">
+    <section className="relative overflow-hidden bg-brand-bg pt-8 pb-12">
       <img
         src={images.contactHero}
         alt="Night office overlooking a Canadian city skyline"
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 object-cover opacity-40 lg:block"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
       />
-      <div className="pointer-events-none absolute right-[18%] top-16 hidden lg:block">
-        <Mail className="h-40 w-40 text-brand-accent/30" strokeWidth={1} />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/92 to-brand-bg/45"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -right-6 top-10 hidden lg:block"
+        aria-hidden="true"
+      >
+        <Mail
+          className="h-56 w-56 text-brand-accent/35 drop-shadow-[0_0_28px_rgba(47,143,255,0.45)]"
+          strokeWidth={0.9}
+        />
       </div>
 
-      <div className="container-page relative grid items-start gap-10 lg:grid-cols-2">
+      <div className="container-page relative grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]">
         <div>
           <SectionEyebrow label="Contact Us" />
-          <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
+          <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.25rem]">
             Contact <span className="text-brand-accent">iTech Jobline</span>
           </h1>
-          <p className="mt-5 max-w-xl text-base font-medium leading-relaxed text-brand-white/90 md:text-lg">
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-brand-white md:text-lg">
             We help Canadian job seekers and employers connect across software, cloud,
             cybersecurity, data, AI, and IT support.
           </p>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-brand-muted">
+          <p className="mt-3 max-w-xl text-base leading-relaxed text-brand-white/80">
             Reach our team for candidate support, hiring solutions, partnerships, or
             technical help. We are here from coast to coast.
           </p>
 
-          <div className="mt-10">
+          <div className="mt-8">
             <ContactMethodCards />
           </div>
 
           <div className="mt-8 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-accent/10">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-brand-accent/50 bg-brand-accent/15">
               <MapleLeafIcon className="h-5 w-5 text-brand-white" />
             </span>
             <div>
@@ -49,12 +59,7 @@ export default function ContactHero() {
           </div>
         </div>
 
-        <div className="relative z-10 lg:pt-4">
-          <img
-            src={images.contactHero}
-            alt=""
-            className="mb-4 h-40 w-full rounded-xl object-cover lg:hidden"
-          />
+        <div className="relative z-10">
           <ContactForm />
         </div>
       </div>
