@@ -9,10 +9,8 @@ export default function NavItems({ onNavigate }) {
       end={link.to === '/'}
       onClick={onNavigate}
       className={({ isActive }) =>
-        `relative px-1 py-1 text-sm font-medium transition-colors ${
-          isActive
-            ? 'text-brand-accent'
-            : 'text-brand-white hover:text-brand-accent'
+        `relative px-1 py-1 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
+          isActive ? 'text-brand-accent' : 'text-brand-white hover:text-brand-accent'
         }`
       }
     >
@@ -20,7 +18,7 @@ export default function NavItems({ onNavigate }) {
         <>
           {link.label}
           {isActive ? (
-            <span className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full bg-brand-accent" />
+            <span className="absolute -bottom-1.5 left-0 right-0 h-[3px] rounded-full bg-brand-accent" />
           ) : null}
         </>
       )}

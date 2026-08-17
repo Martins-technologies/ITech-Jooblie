@@ -1,42 +1,46 @@
 /** Data-driven footer columns. Footer maps over `footerColumns` keys in insertion order. */
 
+export const footerBrandLine = "Canada's Tech Job Board";
+
 export const footerTagline =
-  "Canada's trusted IT job board connecting talent with verified employers and quality opportunities across the tech industry.";
+  "Connecting Canada's top tech talent with innovative employers from coast to coast. Your next great hire starts here.";
 
 export const socialLinks = [
-  { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com' },
+  { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com', filled: true },
   { id: 'twitter', label: 'Twitter / X', href: 'https://x.com' },
   { id: 'facebook', label: 'Facebook', href: 'https://www.facebook.com' },
+  { id: 'email', label: 'Email', href: 'mailto:hello@itechjobline.ca' },
 ];
 
 export const footerColumns = {
   quickLinks: {
     title: 'Quick Links',
     items: [
-      { label: 'Home', to: '/' },
       { label: 'Browse Jobs', to: '/jobs' },
-      { label: 'Employers', to: '/employers' },
+      { label: 'Advanced Search', to: '/jobs' },
+      { label: 'Job Alerts', to: '/jobs' },
+      { label: 'Career Resources', to: '/about' },
       { label: 'About Us', to: '/about' },
       { label: 'Contact Us', to: '/contact' },
     ],
   },
-  popularJobs: {
-    title: 'Popular IT Jobs',
+  forEmployers: {
+    title: 'For Employers',
     items: [
-      { label: 'Software Developer Jobs', to: '/jobs?keyword=Software%20Developer' },
-      { label: 'Cloud Engineer Jobs', to: '/jobs?keyword=Cloud%20Engineer' },
-      { label: 'Cybersecurity Jobs', to: '/jobs?keyword=Cybersecurity' },
-      { label: 'Data Analyst Jobs', to: '/jobs?keyword=Data%20Analyst' },
-      { label: 'DevOps Engineer Jobs', to: '/jobs?keyword=DevOps' },
+      { label: 'Post a Job', to: '/post-job' },
+      { label: 'Search Resumes', to: '/employers' },
+      { label: 'Pricing Plans', to: '/post-job#pricing-plans' },
+      { label: 'Employer Dashboard', to: '/sign-in' },
+      { label: 'Success Stories', to: '/about' },
+      { label: 'Recruitment Tips', to: '/employers' },
     ],
   },
   contactInfo: {
-    title: 'Contact Us',
+    title: 'Contact Info',
     items: [
       {
-        label: 'info@itechjobline.ca',
-        href: 'mailto:info@itechjobline.ca',
-        icon: 'mail',
+        label: 'Toronto, Ontario, Canada',
+        icon: 'mapPin',
       },
       {
         label: '+1 (647) 555-0198',
@@ -44,17 +48,20 @@ export const footerColumns = {
         icon: 'phone',
       },
       {
-        label: 'Toronto, Ontario, Canada',
-        icon: 'mapPin',
+        label: 'hello@itechjobline.ca',
+        href: 'mailto:hello@itechjobline.ca',
+        icon: 'mail',
+      },
+      {
+        label: 'www.itechjobline.ca',
+        to: '/',
+        icon: 'globe',
       },
     ],
   },
-  legal: {
-    title: 'Legal',
-    items: [
-      { label: 'Privacy Policy', to: '#' },
-      { label: 'Terms of Use', to: '#' },
-      { label: 'Cookie Policy', to: '#' },
-    ],
-  },
 };
+
+export const footerLegalLinks = [
+  { label: 'Privacy Policy', to: '#' },
+  { label: 'Terms of Use', to: '#' },
+];

@@ -99,7 +99,7 @@ Still to come
 2. Real authentication and account creation
 3. Real API integration (job posts, pricing checkout, and contact submissions)
 
-Canonical logo and footer (Module 3): the shared Logo.jsx stacked iTech / JOBLINE badge and the 5-column Footer.jsx (Quick Links, Popular IT Jobs, Contact, Legal) are the current source of truth for every page.
+Canonical logo and footer: Logo.jsx renders public/logo.png in the navbar, footer, and sign-in panel. Footer.jsx is a shared 4-column layout (brand, Quick Links, For Employers, Contact Info) plus a copyright / legal bar on every page.
 
 ## Mock data
 
@@ -113,7 +113,7 @@ None required yet. These will be added when backend and API integration begins.
 
 Homepage hero uses public/img1.jfif (also used on the Sign In left panel). Post a Job hero uses public/img2.jfif. Employers hero uses public/img3.jfif. Contact Us uses public/img4.jfif through img7.jfif. Browse Jobs hero uses public/img8.jfif. About Us uses public/img9.jfif (hero), img10.jfif (mission), and img11.jfif (team). Paths are stored in src/data/images.js so swapping a file later is a one line change.
 
-The navbar and footer use the stacked iTech / JOBLINE badge in src/components/layout/Logo.jsx.
+The navbar and footer use public/logo.png through src/components/layout/Logo.jsx.
 
 Testimonial and resource images still use temporary Unsplash URLs in src/data/images.js.
 

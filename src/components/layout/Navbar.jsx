@@ -9,25 +9,25 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-brand-bg">
-      <div className="container-page flex h-[72px] items-center justify-between gap-4">
-        <Logo />
+      <div className="container-page grid h-[72px] grid-cols-[1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
+        <Logo size="md" className="justify-self-start" />
 
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
           <NavItems />
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
-          <Button to="/post-job" icon={Briefcase} nav>
+        <div className="hidden items-center justify-self-end gap-3 md:flex">
+          <Button to="/post-job" icon={Briefcase}>
             Post a Job
           </Button>
-          <Button to="/sign-in" variant="outline" icon={User} nav>
+          <Button to="/sign-in" variant="outline" icon={User}>
             Sign In
           </Button>
         </div>
 
         <button
           type="button"
-          className="inline-flex rounded-lg border border-brand-border/50 p-2 text-brand-white md:hidden"
+          className="inline-flex justify-self-end rounded-lg border border-brand-border/50 p-2 text-brand-white md:hidden"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
@@ -42,14 +42,13 @@ export default function Navbar() {
             <NavItems onNavigate={() => setOpen(false)} />
           </nav>
           <div className="mt-5 flex flex-col gap-3">
-            <Button to="/post-job" icon={Briefcase} nav onClick={() => setOpen(false)}>
+            <Button to="/post-job" icon={Briefcase} onClick={() => setOpen(false)}>
               Post a Job
             </Button>
             <Button
               to="/sign-in"
               variant="outline"
               icon={User}
-              nav
               onClick={() => setOpen(false)}
             >
               Sign In

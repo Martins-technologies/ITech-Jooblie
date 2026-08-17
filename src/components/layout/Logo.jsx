@@ -1,37 +1,23 @@
 import { Link } from 'react-router-dom';
+import { images } from '../../data/images.js';
 
 const sizeStyles = {
-  sm: {
-    box: 'min-w-[4.5rem] px-2.5 py-1.5',
-    title: 'text-sm',
-    subtitle: 'text-[8px] tracking-[0.28em]',
-  },
-  md: {
-    box: 'min-w-[5.25rem] px-3 py-2',
-    title: 'text-base',
-    subtitle: 'text-[9px] tracking-[0.3em]',
-  },
-  lg: {
-    box: 'min-w-[6rem] px-3.5 py-2.5',
-    title: 'text-lg',
-    subtitle: 'text-[10px] tracking-[0.32em]',
-  },
+  sm: 'h-9',
+  md: 'h-11',
+  lg: 'h-[3.25rem]',
 };
 
-/** Canonical stacked wordmark used in the navbar and footer. */
+/** Site wordmark from public/logo.png — used in the navbar, footer, and sign-in panel. */
 export default function Logo({ size = 'md', className = '' }) {
-  const styles = sizeStyles[size] || sizeStyles.md;
+  const height = sizeStyles[size] || sizeStyles.md;
 
   return (
     <Link
       to="/"
       aria-label="iTech Jobline home"
-      className={`inline-flex flex-col items-center justify-center rounded-md border border-brand-accent/80 ${styles.box} ${className}`}
+      className={`inline-flex shrink-0 items-center focus-visible:ring-2 focus-visible:ring-brand-accent ${className}`}
     >
-      <span className={`font-bold leading-none text-brand-white ${styles.title}`}>iTech</span>
-      <span className={`mt-1 font-semibold leading-none text-brand-accent ${styles.subtitle}`}>
-        JOBLINE
-      </span>
+      <img src={images.logo} alt="iTech Jobline" className={`${height} w-auto`} />
     </Link>
   );
 }
