@@ -40,6 +40,7 @@ export default function CareerPathsSection() {
     <section className="bg-brand-bg pb-8">
       <div className="container-page">
         <SectionHeading
+          compact
           title="Explore Popular"
           accent="IT Career Paths"
           subtitle="Browse roles by category and find your perfect match."

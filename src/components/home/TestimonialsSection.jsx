@@ -4,9 +4,9 @@ import SectionHeading from '../common/SectionHeading.jsx';
 import TestimonialCard from './TestimonialCard.jsx';
 
 const trustStats = [
-  { icon: ShieldCheck, label: 'Trusted by 10,000+ Tech Professionals' },
-  { icon: Building2, label: 'Partnered with 2,500+ Top Tech Employers' },
-  { icon: Star, label: '4.8/5 Average Rating From Our Community' },
+  { icon: ShieldCheck, title: 'Trusted by 10,000+', subtitle: 'Tech Professionals' },
+  { icon: Building2, title: 'Partnered with 2,500+', subtitle: 'Top Tech Employers' },
+  { icon: Star, title: '4.8/5 Average Rating', subtitle: 'From Our Community' },
 ];
 
 export default function TestimonialsSection() {
@@ -25,11 +25,23 @@ export default function TestimonialsSection() {
           ))}
         </div>
 
-        <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-between">
-          {trustStats.map((stat) => (
-            <div key={stat.label} className="flex items-center gap-3">
-              <stat.icon className="h-6 w-6 shrink-0 text-brand-accent" />
-              <p className="text-sm font-medium text-brand-white">{stat.label}</p>
+        <div className="mt-8 grid gap-6 py-2 sm:grid-cols-3 sm:gap-0">
+          {trustStats.map((stat, index) => (
+            <div
+              key={stat.title}
+              className={`flex items-center justify-center gap-3 sm:px-6 ${
+                index > 0 ? 'sm:border-l sm:border-brand-border/50' : ''
+              }`}
+            >
+              <stat.icon
+                className="h-6 w-6 shrink-0 text-brand-accent"
+                strokeWidth={1.75}
+                aria-hidden="true"
+              />
+              <div>
+                <p className="text-base font-medium text-brand-white">{stat.title}</p>
+                <p className="text-sm text-brand-muted">{stat.subtitle}</p>
+              </div>
             </div>
           ))}
         </div>

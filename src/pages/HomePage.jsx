@@ -38,7 +38,7 @@ export default function HomePage() {
 
       <TestimonialsSection />
       <CareerResourcesSection />
-      <CTABanner />
+      <CTABanner align="split" />
     </div>
   );
 }
