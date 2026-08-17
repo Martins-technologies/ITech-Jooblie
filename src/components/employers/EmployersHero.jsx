@@ -9,7 +9,7 @@ import EmployerFeatureHighlights from './EmployerFeatureHighlights.jsx';
 
 export default function EmployersHero() {
   return (
-    <section className="bg-brand-bg pt-4">
+    <section className="page-hero bg-brand-bg">
       <div className="container-page grid items-center gap-8 lg:grid-cols-12">
         <div className="lg:col-span-7">
           <Badge icon={MapleLeafIcon}>

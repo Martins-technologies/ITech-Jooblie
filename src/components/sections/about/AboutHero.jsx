@@ -7,7 +7,7 @@ import StatCard from '../jobs/StatCard.jsx';
 
 export default function AboutHero() {
   return (
-    <section className="bg-brand-bg pt-6 pb-10">
+    <section className="page-hero bg-brand-bg pb-10">
       <div className="container-page">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div>

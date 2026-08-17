@@ -11,7 +11,7 @@ function scrollToId(id) {
 
 export default function PostJobHero() {
   return (
-    <section id="post-job-hero" className="relative overflow-hidden bg-brand-bg pt-6 pb-16">
+    <section id="post-job-hero" className="page-hero relative overflow-hidden bg-brand-bg pb-16">
       <img
         src={images.postJobHero}
         alt=""
@@ -67,7 +67,7 @@ export default function PostJobHero() {
           </ul>
         </div>
 
-        <div className="relative z-10 scroll-mt-24 lg:pt-2">
+        <div className="relative z-10 scroll-mt-24">
           <PostJobForm />
         </div>
       </div>

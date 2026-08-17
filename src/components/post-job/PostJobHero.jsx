@@ -9,7 +9,7 @@ import EmployerStatsBar from './EmployerStatsBar.jsx';
 
 export default function PostJobHero() {
   return (
-    <section className="bg-brand-bg pt-4">
+    <section className="page-hero bg-brand-bg">
       <div className="container-page grid items-center gap-8 lg:grid-cols-2">
         <div>
           <Badge icon={Users}>{heroCopy.badge}</Badge>

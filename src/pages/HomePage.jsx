@@ -14,7 +14,7 @@ import { heroCategories } from '../data/categories.js';
 export default function HomePage() {
   return (
     <div className="bg-brand-bg">
-      <section className="bg-brand-bg pt-4">
+      <section className="page-hero bg-brand-bg">
         <HeroSection />
         <div className="container-page mt-8 space-y-8 pb-8">
           <CategoryGrid items={heroCategories} columns={5} />

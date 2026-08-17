@@ -9,7 +9,7 @@ import StatCard from './StatCard.jsx';
 
 export default function JobsHero({ search }) {
   return (
-    <section className="relative overflow-hidden bg-brand-bg pt-6 pb-10">
+    <section className="page-hero relative overflow-hidden bg-brand-bg pb-10">
       <CanadaDotMap className="pointer-events-none absolute inset-0 h-full w-full opacity-20" />
 
       <div className="container-page relative">
