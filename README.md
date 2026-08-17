@@ -1,6 +1,6 @@
 # iTech Jobline
 
-iTech Jobline is a Canadian IT job board frontend built with React. This is the first module of a multi page app. The Home page is fully designed. Remaining routes render placeholder pages until those modules are built.
+iTech Jobline is a Canadian IT job board frontend built with React. The Home page and Post a Job landing page are fully designed. Remaining routes render placeholder pages until those modules are built.
 
 ## Tech stack
 
@@ -46,7 +46,7 @@ The app starts at http://localhost:5173.
 ```
 src/
   assets/          Static images and SVGs
-  components/      Reusable UI for layout, common, and home sections
+  components/      Reusable UI for layout, common, home, and post-job sections
   data/            Nav links, jobs, testimonials, image paths, and other content
   pages/           Route level page components
   routes/          Central React Router table
@@ -59,8 +59,9 @@ Brand files in public/
 
 ```
 public/
-  logo.png         Navbar and footer logo
+  logo.png         Optional brand PNG
   img1.jfif        Homepage hero image
+  img2.jfif        Post a Job hero image
 ```
 
 ## How to add a new page
@@ -68,8 +69,9 @@ public/
 1. Create a component in src/pages/ (for example PricingPage.jsx).
 2. Register the route in src/routes/AppRoutes.jsx.
 3. If it belongs in the navbar or footer, add it to src/data/navLinks.js. Footer Quick Links reuse this same list.
+4. Nested routes (for example /post-job/create) are registered in AppRoutes.jsx only. Do not add them to the navbar unless they should appear in the main menu. Nested paths stay active on the parent nav link because NavLink matches the prefix unless end is set (Home uses end so only / is active).
 
-Placeholder pages already exist for Browse Jobs, Employers, About Us, Contact Us, Sign In, and Post a Job so navigation never 404s while those modules are built.
+Completed pages: Home (/) and Post a Job (/post-job). Create Job Post (/post-job/create) is a placeholder reached from Post a Job CTAs.
 
 ## Environment variables
 
@@ -77,7 +79,9 @@ None required yet. These will be added when backend and API integration begins.
 
 ## Notes on assets
 
-Homepage hero uses public/img1.jfif. The navbar and footer logo uses public/logo.png. Both paths are stored in src/data/images.js so swapping a file later is a one line change.
+Homepage hero uses public/img1.jfif. Post a Job hero uses public/img2.jfif. Paths are stored in src/data/images.js so swapping a file later is a one line change.
+
+The navbar and footer use the two-line iTech Jobline lockup in src/components/layout/Logo.jsx.
 
 Testimonial and resource images still use temporary Unsplash URLs in src/data/images.js.
 

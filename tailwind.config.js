@@ -25,6 +25,7 @@ export default {
       backgroundImage: {
         'dot-grid':
           'radial-gradient(circle, rgba(47, 143, 255, 0.18) 1px, transparent 1px)',
+        'brand-gradient': 'linear-gradient(90deg, #2f8fff 0%, #00d1ff 100%)',
       },
     },
   },

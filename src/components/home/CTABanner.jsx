@@ -1,11 +1,28 @@
 import { Briefcase, Search } from 'lucide-react';
 import Button from '../common/Button.jsx';
 
-export default function CTABanner() {
+const defaultActions = [
+  { label: 'Browse Jobs', to: '/jobs', icon: Search, variant: 'primary' },
+  { label: 'Post a Job', to: '/post-job', icon: Briefcase, variant: 'outline' },
+];
+
+/**
+ * Shared CTA banner. Pass icon, title, accent, subtitle, actions, and align.
+ */
+export default function CTABanner({
+  icon: Icon = Briefcase,
+  title = 'Ready to Find Your Next',
+  accent = 'Tech Job in Canada?',
+  subtitle = 'Browse thousands of IT roles or post an opening and connect with Canada\'s top tech talent today.',
+  actions = defaultActions,
+  align = 'center',
+}) {
+  const isSplit = align === 'split';
+
   return (
     <section className="bg-brand-bg pb-8">
       <div className="container-page">
-        <div className="relative overflow-hidden rounded-2xl border border-brand-border/40 bg-brand-card px-6 py-12 text-center md:px-12">
+        <div className="relative overflow-hidden rounded-2xl border border-brand-border/40 bg-brand-card px-6 py-10 shadow-card md:px-10">
           <div
             className="pointer-events-none absolute inset-0 bg-dot-grid opacity-30"
             style={{ backgroundSize: '20px 20px' }}
@@ -13,25 +30,39 @@ export default function CTABanner() {
           />
           <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-80 -translate-x-1/2 rounded-full bg-brand-accent/20 blur-3xl" />
 
-          <div className="relative">
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-brand-accent/15">
-              <Briefcase className="h-7 w-7 text-brand-accent" />
+          <div
+            className={`relative flex flex-col gap-6 ${
+              isSplit
+                ? 'lg:flex-row lg:items-center lg:justify-between'
+                : 'items-center text-center'
+            }`}
+          >
+            <div className={`flex gap-4 ${isSplit ? 'items-center' : 'flex-col items-center'}`}>
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-accent/15">
+                <Icon className="h-7 w-7 text-brand-accent" />
+              </div>
+              <div className={isSplit ? 'text-left' : ''}>
+                <h2 className="text-2xl font-bold text-brand-white md:text-3xl">
+                  {title} <span className="text-brand-accent">{accent}</span>
+                </h2>
+                <p className={`mt-2 max-w-xl text-brand-muted ${isSplit ? '' : 'mx-auto'}`}>
+                  {subtitle}
+                </p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-brand-white md:text-3xl lg:text-4xl">
-              Ready to Find Your Next{' '}
-              <span className="text-brand-accent">Tech Job in Canada?</span>
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-brand-muted">
-              Browse thousands of IT roles or post an opening and connect with
-              Canada&apos;s top tech talent today.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button to="/jobs" icon={Search}>
-                Browse Jobs
-              </Button>
-              <Button to="/post-job" variant="outline" icon={Briefcase}>
-                Post a Job
-              </Button>
+
+            <div className="flex flex-col items-center gap-3 sm:flex-row">
+              {actions.map((action) => (
+                <Button
+                  key={action.label}
+                  to={action.to}
+                  href={action.href}
+                  variant={action.variant}
+                  icon={action.icon}
+                >
+                  {action.label}
+                </Button>
+              ))}
             </div>
           </div>
         </div>

@@ -3,18 +3,21 @@ import { Link } from 'react-router-dom';
 const variants = {
   primary:
     'bg-brand-accent text-brand-white border border-transparent hover:bg-brand-accentHover',
+  gradient:
+    'bg-brand-gradient text-brand-white border border-transparent hover:opacity-90',
   outline:
     'bg-transparent text-brand-white border border-brand-accent hover:bg-brand-accent/10',
   ghost: 'bg-transparent text-brand-accent border border-transparent hover:text-brand-accentHover',
 };
 
 /**
- * Shared button. Pass `to` to render a React Router <Link>; otherwise a <button>.
+ * Shared button. Pass `to` for a React Router <Link>, `href` for a plain <a>.
  */
 export default function Button({
   variant = 'primary',
   icon: Icon,
   to,
+  href,
   children,
   type = 'button',
   className = '',
@@ -28,6 +31,14 @@ export default function Button({
       {children}
     </>
   );
+
+  if (href) {
+    return (
+      <a href={href} className={classes} {...props}>
+        {content}
+      </a>
+    );
+  }
 
   if (to) {
     return (

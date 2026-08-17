@@ -7,6 +7,7 @@ import AboutUsPage from '../pages/AboutUsPage.jsx';
 import ContactUsPage from '../pages/ContactUsPage.jsx';
 import SignInPage from '../pages/SignInPage.jsx';
 import PostJobPage from '../pages/PostJobPage.jsx';
+import CreateJobPostPage from '../pages/CreateJobPostPage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 
 /**
@@ -23,6 +24,7 @@ export default function AppRoutes() {
         <Route path="/contact" element={<ContactUsPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/post-job" element={<PostJobPage />} />
+        <Route path="/post-job/create" element={<CreateJobPostPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
