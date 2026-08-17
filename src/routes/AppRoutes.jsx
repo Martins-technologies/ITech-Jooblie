@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from '../components/layout/Layout.jsx';
 import HomePage from '../pages/HomePage.jsx';
-import BrowseJobsPage from '../pages/BrowseJobsPage.jsx';
+import JobsPage from '../pages/JobsPage.jsx';
+import JobDetailsPlaceholderPage from '../pages/JobDetailsPlaceholderPage.jsx';
 import EmployersPage from '../pages/EmployersPage.jsx';
 import AboutUsPage from '../pages/AboutUsPage.jsx';
 import ContactUsPage from '../pages/ContactUsPage.jsx';
@@ -18,7 +19,8 @@ export default function AppRoutes() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/jobs" element={<BrowseJobsPage />} />
+        <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/jobs/:jobId" element={<JobDetailsPlaceholderPage />} />
         <Route path="/employers" element={<EmployersPage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactUsPage />} />

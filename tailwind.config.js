@@ -15,6 +15,16 @@ export default {
           muted: '#94a3b8',
           white: '#ffffff',
         },
+        accent: {
+          orange: '#F97316',
+          orangeHover: '#ea6a0c',
+        },
+        status: {
+          success: '#22C55E',
+          remote: '#38BDF8',
+          hybrid: '#38BDF8',
+          fulltime: '#38BDF8',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'Segoe UI', 'sans-serif'],

@@ -8,6 +8,8 @@ const variants = {
   outline:
     'bg-transparent text-brand-white border border-brand-accent hover:bg-brand-accent/10',
   ghost: 'bg-transparent text-brand-accent border border-transparent hover:text-brand-accentHover',
+  accent:
+    'bg-accent-orange text-brand-white border border-transparent hover:bg-accent-orangeHover',
 };
 
 /**

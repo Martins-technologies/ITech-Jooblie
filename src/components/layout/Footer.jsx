@@ -1,17 +1,11 @@
 import { Link } from 'react-router-dom';
+import { Linkedin, Facebook, Mail, MapPin, Phone, Globe } from 'lucide-react';
 import {
-  Linkedin,
-  Facebook,
-  Instagram,
-  Youtube,
-  MapPin,
-  Mail,
-  Phone,
-  Clock,
-} from 'lucide-react';
-import {
+  footerTagline,
+  footerBottomTagline,
   footerQuickLinks,
   popularJobLinks,
+  employerLinks,
   socialLinks,
   contactInfo,
   legalLinks,
@@ -23,8 +17,7 @@ const socialIcons = {
   linkedin: Linkedin,
   twitter: TwitterIcon,
   facebook: Facebook,
-  instagram: Instagram,
-  youtube: Youtube,
+  mail: Mail,
 };
 
 function TwitterIcon({ className }) {
@@ -38,12 +31,11 @@ function TwitterIcon({ className }) {
 export default function Footer() {
   return (
     <footer className="border-t border-brand-border/30 bg-brand-bg">
-      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div>
           <Logo />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-brand-muted">
-            Canada&apos;s trusted IT job board connecting job seekers with top tech
-            employers across the country.
+            {footerTagline}
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             {socialLinks.map((item) => {
@@ -52,10 +44,10 @@ export default function Footer() {
                 <a
                   key={item.id}
                   href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={item.href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel={item.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                   aria-label={item.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-border/50 text-brand-accent transition-colors hover:border-brand-accent hover:bg-brand-accent/10"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-white/70 text-brand-white transition-colors hover:border-brand-accent hover:text-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
@@ -66,15 +58,23 @@ export default function Footer() {
 
         <FooterColumn title="Quick Links">
           {footerQuickLinks.map((link) => (
-            <Link key={link.to} to={link.to} className="hover:text-brand-accent">
+            <Link key={link.label} to={link.to} className="hover:text-brand-accent">
               {link.label}
             </Link>
           ))}
         </FooterColumn>
 
-        <FooterColumn title="Popular Job Links">
+        <FooterColumn title="Popular Jobs">
           {popularJobLinks.map((link) => (
-            <Link key={link.to} to={link.to} className="hover:text-brand-accent">
+            <Link key={link.label} to={link.to} className="hover:text-brand-accent">
+              {link.label}
+            </Link>
+          ))}
+        </FooterColumn>
+
+        <FooterColumn title="For Employers">
+          {employerLinks.map((link) => (
+            <Link key={link.label} to={link.to} className="hover:text-brand-accent">
               {link.label}
             </Link>
           ))}
@@ -85,34 +85,48 @@ export default function Footer() {
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-accent" />
             {contactInfo.address}
           </span>
-          <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-2 hover:text-brand-accent">
-            <Mail className="h-4 w-4 shrink-0 text-brand-accent" />
-            {contactInfo.email}
-          </a>
-          <a href={`tel:${contactInfo.phone.replace(/[^\d+]/g, '')}`} className="flex items-center gap-2 hover:text-brand-accent">
+          <a
+            href={`tel:${contactInfo.phone.replace(/[^\d+]/g, '')}`}
+            className="flex items-center gap-2 hover:text-brand-accent"
+          >
             <Phone className="h-4 w-4 shrink-0 text-brand-accent" />
             {contactInfo.phone}
           </a>
-          <span className="flex items-center gap-2">
-            <Clock className="h-4 w-4 shrink-0 text-brand-accent" />
-            {contactInfo.hours}
-          </span>
+          <a
+            href={`mailto:${contactInfo.email}`}
+            className="flex items-center gap-2 hover:text-brand-accent"
+          >
+            <Mail className="h-4 w-4 shrink-0 text-brand-accent" />
+            {contactInfo.email}
+          </a>
+          <a
+            href={contactInfo.websiteHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-brand-accent"
+          >
+            <Globe className="h-4 w-4 shrink-0 text-brand-accent" />
+            {contactInfo.website}
+          </a>
         </FooterColumn>
       </div>
 
       <div className="border-t border-brand-border/30">
         <div className="container-page flex flex-col gap-3 py-5 text-xs text-brand-muted md:flex-row md:items-center md:justify-between">
-          <p>© 2026 iTech Jobline. All rights reserved.</p>
-          <div className="flex flex-wrap items-center gap-4">
-            {legalLinks.map((link) => (
-              <Link key={link.label} to={link.to} className="hover:text-brand-accent">
-                {link.label}
-              </Link>
+          <p>© 2025 iTech Jobline. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-2">
+            {legalLinks.map((link, index) => (
+              <span key={link.label} className="inline-flex items-center gap-2">
+                {index > 0 ? <span aria-hidden="true">|</span> : null}
+                <Link to={link.to} className="hover:text-brand-accent">
+                  {link.label}
+                </Link>
+              </span>
             ))}
           </div>
-          <p className="inline-flex items-center gap-1.5">
-            <MapleLeafIcon className="h-3.5 w-3.5 text-brand-accent" />
-            Proudly Canadian. Jobs from coast to coast.
+          <p className="inline-flex max-w-xl items-start gap-1.5 md:max-w-sm md:text-right">
+            <span>{footerBottomTagline}</span>
+            <MapleLeafIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-white" />
           </p>
         </div>
       </div>
