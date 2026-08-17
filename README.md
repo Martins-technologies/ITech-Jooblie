@@ -1,6 +1,6 @@
 # iTech Jobline
 
-iTech Jobline is a Canadian IT job board frontend built with React. Home, Post a Job, Employers, Contact Us, and Browse Jobs are fully designed. Remaining routes render placeholder pages until those modules are built.
+iTech Jobline is a Canadian IT job board frontend built with React. Home, Post a Job, Employers, Contact Us, Browse Jobs, and About Us are fully designed. Remaining routes render placeholder pages until those modules are built.
 
 ## Tech stack
 
@@ -69,6 +69,9 @@ public/
   img6.jfif        Contact connect image
   img7.jfif        Contact office image
   img8.jfif        Browse Jobs hero image
+  img9.jfif        About Us hero image
+  img10.jfif       About Us mission / vision image
+  img11.jfif       About Us team commitment image
 ```
 
 ## How to add a new page
@@ -87,14 +90,16 @@ Completed modules
 3. Employers (/employers)
 4. Contact Us (/contact)
 5. Browse Jobs (/jobs)
+6. About Us (/about)
 
 Still to come
 
 1. Job details (/jobs/:jobId currently shows a placeholder)
-2. About Us
-3. Sign In / authentication
-4. Create Job Post form
-5. Real API integration
+2. Sign In / authentication
+3. Create Job Post form
+4. Real API integration
+
+Canonical logo and footer (Module 3): the shared Logo.jsx stacked iTech / JOBLINE badge and the 5-column Footer.jsx (Quick Links, Popular IT Jobs, Contact, Legal) are the current source of truth for every page.
 
 ## Mock data
 
@@ -106,9 +111,9 @@ None required yet. These will be added when backend and API integration begins.
 
 ## Notes on assets
 
-Homepage hero uses public/img1.jfif. Post a Job hero uses public/img2.jfif. Employers hero uses public/img3.jfif. Contact Us uses public/img4.jfif through img7.jfif. Browse Jobs hero uses public/img8.jfif. Paths are stored in src/data/images.js so swapping a file later is a one line change.
+Homepage hero uses public/img1.jfif. Post a Job hero uses public/img2.jfif. Employers hero uses public/img3.jfif. Contact Us uses public/img4.jfif through img7.jfif. Browse Jobs hero uses public/img8.jfif. About Us uses public/img9.jfif (hero), img10.jfif (mission), and img11.jfif (team). Paths are stored in src/data/images.js so swapping a file later is a one line change.
 
-The navbar and footer use the brand PNG in src/components/layout/Logo.jsx.
+The navbar and footer use the stacked iTech / JOBLINE badge in src/components/layout/Logo.jsx.
 
 Testimonial and resource images still use temporary Unsplash URLs in src/data/images.js.
 

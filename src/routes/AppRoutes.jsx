@@ -4,7 +4,7 @@ import HomePage from '../pages/HomePage.jsx';
 import JobsPage from '../pages/JobsPage.jsx';
 import JobDetailsPlaceholderPage from '../pages/JobDetailsPlaceholderPage.jsx';
 import EmployersPage from '../pages/EmployersPage.jsx';
-import AboutUsPage from '../pages/AboutUsPage.jsx';
+import AboutPage from '../pages/AboutPage.jsx';
 import ContactUsPage from '../pages/ContactUsPage.jsx';
 import SignInPage from '../pages/SignInPage.jsx';
 import PostJobPage from '../pages/PostJobPage.jsx';
@@ -22,7 +22,7 @@ export default function AppRoutes() {
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/jobs/:jobId" element={<JobDetailsPlaceholderPage />} />
         <Route path="/employers" element={<EmployersPage />} />
-        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactUsPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/post-job" element={<PostJobPage />} />
