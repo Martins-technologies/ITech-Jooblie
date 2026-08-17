@@ -9,14 +9,16 @@ export default function EmployerFeatureHighlights() {
         {heroFeatureCards.map((item) => {
           const Icon = item.icon;
           return (
-            <Card key={item.id} className="flex h-full flex-col p-6">
+            <Card key={item.id} className="flex h-full items-start gap-3 p-4">
               <Icon
-                className="mb-4 h-11 w-11 text-brand-accent"
+                className="h-8 w-8 shrink-0 text-brand-accent"
                 strokeWidth={1.5}
                 aria-hidden="true"
               />
-              <h3 className="mb-2 font-semibold text-brand-white">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-brand-muted">{item.description}</p>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold text-brand-white">{item.title}</h3>
+                <p className="mt-0.5 text-sm leading-snug text-brand-muted">{item.description}</p>
+              </div>
             </Card>
           );
         })}

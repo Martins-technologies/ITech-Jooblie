@@ -33,23 +33,27 @@ export default function HowCanWeHelp() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {helpCategories.map((item) => (
-            <Card key={item.id} className="flex h-full flex-col p-5">
-              <IconBadge icon={item.icon} />
-              <h3 className="mt-4 font-semibold text-brand-white">{item.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-brand-muted">
-                {item.description}
-              </p>
+            <Card key={item.id} className="flex h-full flex-col p-4">
+              <div className="flex items-start gap-3">
+                <IconBadge icon={item.icon} className="h-10 w-10 shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-brand-white">{item.title}</h3>
+                  <p className="mt-0.5 text-sm leading-snug text-brand-muted">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
               {item.href ? (
                 <a
                   href={item.href}
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-accent"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-accent"
                 >
                   Learn more <ArrowRight className="h-4 w-4" />
                 </a>
               ) : (
                 <Link
                   to={item.to}
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-accent"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-accent"
                 >
                   Learn more <ArrowRight className="h-4 w-4" />
                 </Link>

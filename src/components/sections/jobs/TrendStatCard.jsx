@@ -5,16 +5,18 @@ export default function TrendStatCard({ label, value, change, icon: Icon }) {
   return (
     <Card hover={false} className="relative overflow-hidden p-5">
       <Sparkline />
-      <div className="relative">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-accent/10 text-brand-accent">
+      <div className="relative flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-accent/10 text-brand-accent">
           <Icon className="h-4 w-4" aria-hidden="true" />
         </div>
-        <p className="mt-3 text-xs text-brand-muted">{label}</p>
-        <p className="mt-1 text-2xl font-bold text-brand-accent">{value}</p>
-        <p className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-status-success">
-          <TrendingUp className="h-3.5 w-3.5" />
-          ↑ {change} from last month
-        </p>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs text-brand-muted">{label}</p>
+          <p className="mt-0.5 text-2xl font-bold leading-none text-brand-accent">{value}</p>
+          <p className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-status-success">
+            <TrendingUp className="h-3.5 w-3.5" />
+            ↑ {change} from last month
+          </p>
+        </div>
       </div>
     </Card>
   );
