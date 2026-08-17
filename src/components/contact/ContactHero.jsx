@@ -19,8 +19,8 @@ export default function ContactHero() {
         <div className="absolute inset-y-0 left-0 w-[38%] bg-gradient-to-r from-[#0b0f19] via-[#0b0f19]/50 to-transparent" />
       </div>
 
-      <div className="container-page relative grid items-start gap-8 py-8 md:py-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,400px)] lg:gap-12 lg:py-12">
-        <div>
+      <div className="container-page relative grid items-start gap-8 py-8 md:py-10 lg:grid-cols-1 lg:py-12">
+        <div className="max-w-3xl">
           <SectionEyebrow label="Contact Us" className="tracking-[0.14em]" />
 
           <h1 className="mt-3 max-w-2xl text-4xl font-extrabold leading-[1.12] tracking-tight text-white md:text-5xl lg:text-[52px]">
@@ -53,18 +53,10 @@ export default function ContactHero() {
           </div>
         </div>
 
-        <div className="relative z-10 lg:mt-2">
-          <div className="relative overflow-hidden rounded-2xl lg:overflow-visible lg:rounded-none">
-            <img
-              src={images.contactFormBg}
-              alt="Night office overlooking a Canadian city skyline"
-              className="absolute inset-0 h-full w-full object-cover lg:hidden"
-            />
-            <div className="relative p-4 sm:p-6 lg:p-0">
-              <ContactForm />
-            </div>
-          </div>
-        </div>
+      </div>
+
+      <div className="relative z-10 mx-4 mb-6 mt-2 lg:absolute lg:bottom-0 lg:right-0 lg:mx-0 lg:mb-0 lg:mt-0 lg:w-[400px]">
+        <ContactForm />
       </div>
     </section>
   );
