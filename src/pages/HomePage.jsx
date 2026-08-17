@@ -17,7 +17,7 @@ export default function HomePage() {
       <section className="bg-brand-bg pt-4">
         <HeroSection />
         <div className="container-page mt-8 space-y-8 pb-8">
-          <CategoryGrid items={heroCategories} columns={5} />
+          <CategoryGrid items={heroCategories} />
           <FeatureHighlights />
         </div>
       </section>

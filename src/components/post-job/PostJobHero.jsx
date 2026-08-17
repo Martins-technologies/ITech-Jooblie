@@ -58,7 +58,7 @@ export default function PostJobHero() {
       </div>
 
       <div className="container-page mt-8 space-y-8 pb-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
           {heroFeatures.map((item) => (
             <EmployerFeatureCard key={item.id} {...item} />
           ))}

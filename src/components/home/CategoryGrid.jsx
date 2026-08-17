@@ -1,13 +1,12 @@
 import CategoryCard from './CategoryCard.jsx';
 
-const columnClasses = {
-  5: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5',
-  6: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-6',
-};
+/** Cards grow to fill the row and wrap before they get too narrow to show full text. */
+const cardGridClass =
+  'grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]';
 
-export default function CategoryGrid({ items, columns = 5 }) {
+export default function CategoryGrid({ items }) {
   return (
-    <div className={`grid gap-2.5 ${columnClasses[columns] || columnClasses[5]}`}>
+    <div className={cardGridClass}>
       {items.map((item) => (
         <CategoryCard key={item.id} {...item} />
       ))}

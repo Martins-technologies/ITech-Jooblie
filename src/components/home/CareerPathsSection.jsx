@@ -45,7 +45,7 @@ export default function CareerPathsSection() {
           accent="IT Career Paths"
           subtitle="Browse roles by category and find your perfect match."
         />
-        <CategoryGrid items={careerPathCategories} columns={6} />
+        <CategoryGrid items={careerPathCategories} />
         <div className="mt-6">
           <StatsBar stats={careerStats} />
         </div>

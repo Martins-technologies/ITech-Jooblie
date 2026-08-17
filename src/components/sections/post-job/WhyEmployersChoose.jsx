@@ -18,7 +18,7 @@ export default function WhyEmployersChoose() {
           subtitle="The trusted platform for hiring IT and tech professionals across Canada."
         />
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
           {whyEmployersChoose.map((item) => (
             <IconTitleCard
               key={item.id}

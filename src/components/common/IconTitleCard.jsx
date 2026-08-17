@@ -18,7 +18,7 @@ export default function IconTitleCard({
           isInline ? 'h-12 w-12 shrink-0' : ''
         }`}
       />
-      <div className={isInline ? 'min-w-0' : 'mt-4'}>
+      <div className={isInline ? 'min-w-0 flex-1' : 'mt-4'}>
         <h3 className="font-semibold text-brand-white">{title}</h3>
         {underline ? (
           <span className="mt-1.5 block h-0.5 w-10 bg-brand-accent" aria-hidden="true" />

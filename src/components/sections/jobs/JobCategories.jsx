@@ -28,7 +28,7 @@ export default function JobCategories() {
           />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
           {jobCategories.map((category) => (
             <CategoryCard key={category.id} {...category} />
           ))}
