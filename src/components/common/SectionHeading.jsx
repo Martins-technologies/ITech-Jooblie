@@ -20,7 +20,11 @@ export default function SectionHeading({
         {after ? <> {after}</> : null}
       </Tag>
       {subtitle ? (
-        <p className="mx-auto mt-3 max-w-2xl text-sm text-brand-muted md:text-base">
+        <p
+          className={`mt-3 max-w-2xl text-sm text-brand-muted md:text-base ${
+            align === 'left' ? '' : 'mx-auto'
+          }`}
+        >
           {subtitle}
         </p>
       ) : null}

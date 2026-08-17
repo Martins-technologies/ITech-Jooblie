@@ -2,8 +2,8 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Card from '../common/Card.jsx';
 
-/** Reused for the hero category row and the career-paths grid. */
-export default function CategoryCard({ title, description, icon: Icon, to }) {
+/** Reused for homepage categories and Employers hiring-category cards. */
+export default function CategoryCard({ title, description, count, icon: Icon, to }) {
   return (
     <Card
       as={Link}
@@ -14,7 +14,11 @@ export default function CategoryCard({ title, description, icon: Icon, to }) {
         <Icon className="h-6 w-6 text-brand-accent" aria-hidden="true" />
       </div>
       <h3 className="mb-2 text-base font-semibold text-brand-white">{title}</h3>
-      <p className="mb-8 text-sm leading-relaxed text-brand-muted">{description}</p>
+      {count ? (
+        <p className="mb-8 text-sm font-medium text-brand-accent">{count}</p>
+      ) : (
+        <p className="mb-8 text-sm leading-relaxed text-brand-muted">{description}</p>
+      )}
       <ArrowRight className="absolute bottom-5 right-5 h-4 w-4 text-brand-accent transition-transform duration-200 group-hover:translate-x-1" />
     </Card>
   );
