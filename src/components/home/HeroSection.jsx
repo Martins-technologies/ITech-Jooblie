@@ -29,14 +29,16 @@ export default function HeroSection() {
           support roles with trusted employers across Canada.
         </p>
 
-        <div className="mt-8 max-w-2xl">
-          <SearchBar
-            query={query}
-            location={location}
-            onQueryChange={setQuery}
-            onLocationChange={setLocation}
-            onSearch={handleSearch}
-          />
+        <div className="mt-8">
+          <div className="max-w-2xl">
+            <SearchBar
+              query={query}
+              location={location}
+              onQueryChange={setQuery}
+              onLocationChange={setLocation}
+              onSearch={handleSearch}
+            />
+          </div>
           <PopularSearches items={popularSearches} onSelect={setQuery} />
         </div>
       </div>
