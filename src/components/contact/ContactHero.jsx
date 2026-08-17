@@ -7,30 +7,29 @@ import ContactMethodCards from './ContactMethodCards.jsx';
 
 export default function ContactHero() {
   return (
-    <section className="relative overflow-hidden bg-brand-bg pt-8 pb-12">
-      <img
-        src={images.contactFormBg}
-        alt="Night office overlooking a Canadian city skyline"
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/80 to-brand-bg/35"
-        aria-hidden="true"
-      />
-
-      <div className="container-page relative grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-        <div>
+    <section className="overflow-hidden bg-[#0b0f19]">
+      <div className="grid lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+        <div className="px-4 py-10 md:px-8 lg:py-14 lg:pl-[max(2rem,calc((100vw-80rem)/2+3rem))] lg:pr-10">
           <SectionEyebrow label="Contact Us" />
-          <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.25rem]">
-            Contact <span className="text-brand-accent">iTech Jobline</span>
-          </h1>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-brand-white md:text-lg">
-            We help Canadian job seekers and employers connect across software, cloud,
-            cybersecurity, data, AI, and IT support.
+
+          <div className="relative mt-3 max-w-xl">
+            <h1 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-white md:text-5xl lg:text-[52px]">
+              Contact <span className="text-brand-accent">iTech Jobline</span>
+            </h1>
+            <Mail
+              className="pointer-events-none absolute -right-4 top-1 hidden h-20 w-20 text-brand-accent drop-shadow-[0_0_16px_rgba(47,143,255,0.8)] md:block"
+              strokeWidth={1.15}
+              aria-hidden="true"
+            />
+          </div>
+
+          <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-white/90">
+            We&apos;re here to help job seekers and employers connect with Canada&apos;s top tech
+            talent.
           </p>
-          <p className="mt-3 max-w-xl text-base leading-relaxed text-brand-white/80">
-            Reach our team for candidate support, hiring solutions, partnerships, or
-            technical help. We are here from coast to coast.
+          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/70">
+            Reach our team for candidate support, hiring solutions, partnerships, or technical
+            help. We are here from coast to coast.
           </p>
 
           <div className="mt-8">
@@ -38,25 +37,27 @@ export default function ContactHero() {
           </div>
 
           <div className="mt-8 flex items-center gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-brand-accent/50 bg-brand-accent/15">
-              <MapleLeafIcon className="h-5 w-5 text-brand-white" />
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-accent">
+              <MapleLeafIcon className="h-5 w-5 text-white" />
             </span>
             <div>
-              <p className="font-semibold text-brand-white">Proudly Canadian.</p>
-              <p className="text-sm text-brand-muted">
+              <p className="font-semibold text-white">Proudly Canadian.</p>
+              <p className="text-sm text-white/70">
                 Supporting IT talent and businesses across Canada.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="relative z-10">
-          <Mail
-            className="pointer-events-none absolute -right-10 top-8 hidden h-44 w-44 text-brand-accent/30 lg:block"
-            strokeWidth={0.85}
-            aria-hidden="true"
+        <div className="relative min-h-[640px]">
+          <img
+            src={images.contactFormBg}
+            alt="Night office overlooking a Canadian city skyline"
+            className="absolute inset-0 h-full w-full object-cover object-center"
           />
-          <ContactForm />
+          <div className="relative z-10 flex h-full items-center justify-center px-6 py-12">
+            <ContactForm />
+          </div>
         </div>
       </div>
     </section>
