@@ -8,18 +8,18 @@ export default function ContactHero() {
   return (
     <section className="overflow-hidden bg-[#0b0f19]">
       <div className="grid lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-        <div className="px-4 py-6 md:px-8 lg:py-8 lg:pl-[max(2rem,calc((100vw-80rem)/2+3rem))] lg:pr-8">
+        <div className="px-4 py-7 md:px-8 lg:py-10 lg:pl-[max(2rem,calc((100vw-80rem)/2+3rem))] lg:pr-8">
           <SectionEyebrow label="Contact Us" />
 
-          <h1 className="mt-2 max-w-xl text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl lg:text-[42px]">
+          <h1 className="mt-3 max-w-2xl text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl lg:text-[50px]">
             Contact <span className="text-brand-accent">iTech Jobline</span>
           </h1>
 
-          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/90">
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-white/90">
             We&apos;re here to help job seekers and employers connect with Canada&apos;s top tech
             talent.
           </p>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/70">
+          <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-white/70">
             Reach our team for candidate support, hiring solutions, partnerships, or technical
             help. We are here from coast to coast.
           </p>
@@ -47,7 +47,7 @@ export default function ContactHero() {
             alt="Night office overlooking a Canadian city skyline"
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
-          <div className="relative z-10 flex h-full items-center justify-center px-5 py-6 lg:px-8 lg:py-8">
+          <div className="relative z-10 flex h-full items-end justify-end px-5 pb-7 pt-10 lg:pl-16 lg:pr-6 lg:pb-9">
             <ContactForm />
           </div>
         </div>
