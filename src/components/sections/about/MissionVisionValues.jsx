@@ -34,7 +34,7 @@ export default function MissionVisionValues() {
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {missionVisionValues.map((item) => (
-            <IconTitleCard key={item.id} {...item} layout="stacked" underline />
+            <IconTitleCard key={item.id} {...item} layout="inline" underline />
           ))}
         </div>
 

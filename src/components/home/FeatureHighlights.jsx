@@ -26,10 +26,15 @@ const highlights = [
 
 export default function FeatureHighlights() {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {highlights.map((item) => (
-        <div key={item.title} className="flex items-start gap-3">
-          <item.icon className="mt-0.5 h-6 w-6 shrink-0 text-brand-accent" />
+    <div className="grid gap-6 sm:grid-cols-2 lg:flex lg:items-stretch lg:gap-0">
+      {highlights.map((item, index) => (
+        <div
+          key={item.title}
+          className={`flex items-start gap-3 lg:flex-1 lg:px-6 ${
+            index > 0 ? 'lg:border-l lg:border-brand-border/50' : 'lg:pl-0'
+          }`}
+        >
+          <item.icon className="h-6 w-6 shrink-0 text-brand-accent" aria-hidden="true" />
           <div>
             <h3 className="font-semibold text-brand-white">{item.title}</h3>
             <p className="mt-1 text-sm text-brand-muted">{item.description}</p>

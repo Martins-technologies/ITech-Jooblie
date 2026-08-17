@@ -17,12 +17,14 @@ export default function WhyUseSection() {
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {whyUseFeatures.map((item) => (
-            <Card key={item.id} className="p-6" hover>
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-accent/10 text-brand-accent">
+            <Card key={item.id} className="flex items-start gap-4 p-6" hover>
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-accent/10 text-brand-accent">
                 <item.icon className="h-6 w-6" />
               </div>
-              <h3 className="mb-2 font-semibold text-brand-white">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-brand-muted">{item.description}</p>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-brand-white">{item.title}</h3>
+                <p className="mt-0.5 text-sm leading-relaxed text-brand-muted">{item.description}</p>
+              </div>
             </Card>
           ))}
         </div>

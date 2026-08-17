@@ -6,7 +6,7 @@ export default function IconTitleCard({
   title,
   description,
   underline = true,
-  layout = 'stacked',
+  layout = 'inline',
 }) {
   const isInline = layout === 'inline';
 
@@ -15,7 +15,7 @@ export default function IconTitleCard({
       <IconBadge
         icon={icon}
         className={`rounded-full border border-brand-accent/40 ${
-          isInline ? 'h-11 w-11 shrink-0' : ''
+          isInline ? 'h-12 w-12 shrink-0' : ''
         }`}
       />
       <div className={isInline ? 'min-w-0' : 'mt-4'}>
@@ -23,7 +23,9 @@ export default function IconTitleCard({
         {underline ? (
           <span className="mt-1.5 block h-0.5 w-10 bg-brand-accent" aria-hidden="true" />
         ) : null}
-        <p className="mt-3 text-sm leading-relaxed text-brand-muted">{description}</p>
+        <p className={`${underline ? 'mt-3' : 'mt-0.5'} text-sm leading-relaxed text-brand-muted`}>
+          {description}
+        </p>
       </div>
     </Card>
   );
