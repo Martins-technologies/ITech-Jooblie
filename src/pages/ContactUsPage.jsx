@@ -1,5 +1,15 @@
-import PlaceholderPage from '../components/common/PlaceholderPage.jsx';
+import ContactHero from '../components/contact/ContactHero.jsx';
+import HowCanWeHelp from '../components/contact/HowCanWeHelp.jsx';
+import OfficeDetails from '../components/contact/OfficeDetails.jsx';
+import LetsConnectBanner from '../components/contact/LetsConnectBanner.jsx';
 
 export default function ContactUsPage() {
-  return <PlaceholderPage title="Contact Us" />;
+  return (
+    <div className="bg-brand-bg">
+      <ContactHero />
+      <HowCanWeHelp />
+      <OfficeDetails />
+      <LetsConnectBanner />
+    </div>
+  );
 }

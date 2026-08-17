@@ -6,6 +6,10 @@ export const images = {
   heroTeam: '/img1.jfif',
   postJobHero: '/img2.jfif',
   employersHero: '/img3.jfif',
+  contactHero: '/img4.jfif',
+  contactHelp: '/img5.jfif',
+  contactConnect: '/img6.jfif',
+  contactOffice: '/img7.jfif',
   testimonialArjun:
     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
   testimonialPriya:

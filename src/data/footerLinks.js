@@ -16,15 +16,16 @@ export const socialLinks = [
 ];
 
 export const contactInfo = {
-  address: '100 King Street West, Toronto, ON M5X 1A9',
+  address: '100 King St W, Suite 5700, Toronto, ON M5X 1C7',
   email: 'hello@itechjobline.ca',
-  phone: '+1 (416) 555-0142',
-  hours: 'Mon–Fri, 9:00 AM – 6:00 PM EST',
+  phone: '+1 (647) 555-0198',
+  hours: 'Mon – Fri: 9:00 AM – 6:00 PM ET',
 };
 
 export const legalLinks = [
   { label: 'Privacy Policy', to: '#' },
   { label: 'Terms of Use', to: '#' },
+  { label: 'Accessibility', to: '#' },
 ];
 
 /** Footer reuses the same nav links so routes never drift out of sync. */
