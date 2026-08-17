@@ -7,6 +7,7 @@ export default function Input({
   id,
   className = '',
   icon: Icon,
+  suffix,
   required = false,
   ...props
 }) {
@@ -31,11 +32,14 @@ export default function Input({
           id={id}
           aria-required={required || undefined}
           aria-invalid={error ? true : undefined}
-          className={`${fieldClass} ${Icon ? 'pl-10' : ''} ${
+          className={`${fieldClass} ${Icon ? 'pl-10' : ''} ${suffix ? 'pr-11' : ''} ${
             error ? 'border-red-400' : 'border-brand-border/40'
           } ${className}`}
           {...props}
         />
+        {suffix ? (
+          <span className="absolute right-2 top-1/2 z-10 -translate-y-1/2">{suffix}</span>
+        ) : null}
       </span>
       {error ? <span className="mt-1 block text-xs text-red-400">{error}</span> : null}
     </label>

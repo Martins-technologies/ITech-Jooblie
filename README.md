@@ -1,6 +1,6 @@
 # iTech Jobline
 
-iTech Jobline is a Canadian IT job board frontend built with React. Home, Post a Job, Employers, Contact Us, Browse Jobs, and About Us are fully designed. Remaining routes render placeholder pages until those modules are built.
+iTech Jobline is a Canadian IT job board frontend built with React. Home, Post a Job, Employers, Contact Us, Browse Jobs, About Us, and Sign In are fully designed. Remaining routes render placeholder pages until those modules are built.
 
 ## Tech stack
 
@@ -91,11 +91,12 @@ Completed modules
 4. Contact Us (/contact)
 5. Browse Jobs (/jobs)
 6. About Us (/about)
+7. Sign In (/sign-in) — client-side email, username, and password validation; Job Seeker / Employer roles; redirects home (no real auth yet)
 
 Still to come
 
 1. Job details (/jobs/:jobId currently shows a placeholder)
-2. Sign In / authentication
+2. Real authentication and account creation
 3. Real API integration (job posts, pricing checkout, and contact submissions)
 
 Canonical logo and footer (Module 3): the shared Logo.jsx stacked iTech / JOBLINE badge and the 5-column Footer.jsx (Quick Links, Popular IT Jobs, Contact, Legal) are the current source of truth for every page.
@@ -110,7 +111,7 @@ None required yet. These will be added when backend and API integration begins.
 
 ## Notes on assets
 
-Homepage hero uses public/img1.jfif. Post a Job hero uses public/img2.jfif. Employers hero uses public/img3.jfif. Contact Us uses public/img4.jfif through img7.jfif. Browse Jobs hero uses public/img8.jfif. About Us uses public/img9.jfif (hero), img10.jfif (mission), and img11.jfif (team). Paths are stored in src/data/images.js so swapping a file later is a one line change.
+Homepage hero uses public/img1.jfif (also used on the Sign In left panel). Post a Job hero uses public/img2.jfif. Employers hero uses public/img3.jfif. Contact Us uses public/img4.jfif through img7.jfif. Browse Jobs hero uses public/img8.jfif. About Us uses public/img9.jfif (hero), img10.jfif (mission), and img11.jfif (team). Paths are stored in src/data/images.js so swapping a file later is a one line change.
 
 The navbar and footer use the stacked iTech / JOBLINE badge in src/components/layout/Logo.jsx.
 

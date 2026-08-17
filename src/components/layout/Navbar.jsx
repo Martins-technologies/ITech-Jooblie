@@ -20,7 +20,7 @@ export default function Navbar() {
           <Button to="/post-job" icon={Briefcase} nav>
             Post a Job
           </Button>
-          <Button to="/sign-in" variant="outline" icon={User}>
+          <Button to="/sign-in" variant="outline" icon={User} nav>
             Sign In
           </Button>
         </div>
@@ -49,6 +49,7 @@ export default function Navbar() {
               to="/sign-in"
               variant="outline"
               icon={User}
+              nav
               onClick={() => setOpen(false)}
             >
               Sign In
