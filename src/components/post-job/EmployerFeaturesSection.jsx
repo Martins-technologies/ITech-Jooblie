@@ -10,7 +10,7 @@ export default function EmployerFeaturesSection() {
           title="Everything You Need to Hire Smarter"
           subtitle="Powerful tools to help Canadian employers attract, manage, and hire top tech talent."
         />
-        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {employerFeatures.map((item) => (
             <EmployerFeatureCard key={item.id} {...item} />
           ))}

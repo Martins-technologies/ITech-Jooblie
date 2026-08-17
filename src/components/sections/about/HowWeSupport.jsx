@@ -21,7 +21,7 @@ export default function HowWeSupport() {
           subtitle="We connect skilled tech professionals with meaningful opportunities across Canada."
         />
 
-        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {careerCategories.map((item) => (
             <IconTitleCard key={item.id} {...item} layout="inline" underline />
           ))}

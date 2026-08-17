@@ -42,7 +42,7 @@ export default function TeamCommitment() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+        <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {teamCommitmentFeatures.map((item) => (
             <IconTitleCard key={item.id} {...item} layout="inline" underline />
           ))}

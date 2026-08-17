@@ -15,16 +15,18 @@ export default function WhyUseSection() {
           subtitle="We make it easier for IT professionals to discover great opportunities across Canada."
         />
 
-        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {whyUseFeatures.map((item) => (
-            <Card key={item.id} className="flex items-start gap-4 p-6" hover>
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-accent/10 text-brand-accent">
-                <item.icon className="h-6 w-6" />
+            <Card key={item.id} className="flex flex-col p-4" hover>
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-accent/10 text-brand-accent">
+                  <item.icon className="h-4 w-4" />
+                </div>
+                <h3 className="min-w-0 text-[15px] font-semibold leading-snug text-brand-white">
+                  {item.title}
+                </h3>
               </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="font-semibold text-brand-white">{item.title}</h3>
-                <p className="mt-0.5 text-sm leading-relaxed text-brand-muted">{item.description}</p>
-              </div>
+              <p className="mt-2 text-[13px] leading-snug text-brand-muted">{item.description}</p>
             </Card>
           ))}
         </div>

@@ -10,7 +10,7 @@ export default function ModernHiringSection() {
           title="Built for Modern Tech Hiring"
           subtitle="Powerful tools and solutions to help you attract, engage, and hire top IT talent."
         />
-        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {modernHiringFeatures.map((item) => {
             const Icon = item.icon;
             return (

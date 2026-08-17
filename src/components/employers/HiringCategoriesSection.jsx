@@ -11,7 +11,7 @@ export default function HiringCategoriesSection() {
           title="Popular"
           accent="Hiring Categories"
         />
-        <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6">
           {hiringCategories.map((item) => (
             <HiringCategoryCard key={item.id} {...item} />
           ))}
