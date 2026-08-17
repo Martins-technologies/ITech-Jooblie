@@ -6,7 +6,7 @@ import ContactMethodCards from './ContactMethodCards.jsx';
 
 export default function ContactHero() {
   return (
-    <section className="page-hero relative overflow-hidden bg-[#0b0f19] pb-10 lg:pb-12">
+    <section className="page-hero relative min-h-[640px] overflow-hidden bg-[#0b0f19] pb-10 lg:min-h-[720px] lg:pb-12">
       <div
         className="pointer-events-none absolute inset-y-0 right-0 hidden w-[62%] lg:block"
         aria-hidden="true"
@@ -19,8 +19,8 @@ export default function ContactHero() {
         <div className="absolute inset-y-0 left-0 w-[38%] bg-gradient-to-r from-[#0b0f19] via-[#0b0f19]/50 to-transparent" />
       </div>
 
-      <div className="container-page relative grid items-start gap-8 lg:grid-cols-12">
-        <div className="lg:col-span-7">
+      <div className="container-page relative">
+        <div className="max-w-xl lg:max-w-[520px]">
           <SectionEyebrow label="Contact Us" className="tracking-[0.14em]" />
 
           <h1 className="mt-3 max-w-2xl text-4xl font-extrabold leading-[1.12] tracking-tight text-white md:text-5xl lg:text-[52px]">
@@ -52,12 +52,10 @@ export default function ContactHero() {
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="relative z-10 lg:col-span-5">
-          <div className="lg:ml-auto lg:w-[400px]">
-            <ContactForm />
-          </div>
-        </div>
+      <div className="relative z-10 mx-4 mt-8 lg:absolute lg:bottom-8 lg:right-4 lg:mx-0 lg:mt-0 lg:w-[400px] xl:right-6">
+        <ContactForm />
       </div>
     </section>
   );
