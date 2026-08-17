@@ -2,13 +2,13 @@ import { contactMethods } from '../../data/contactMethods.js';
 
 export default function ContactMethodCards() {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       {contactMethods.map((item) => {
         const Icon = item.icon;
         return (
           <article
             key={item.id}
-            className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[#0b1224]/70 p-4"
+            className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[#0b1224]/70 p-3"
           >
             <div className="flex items-start gap-3">
               <Icon
