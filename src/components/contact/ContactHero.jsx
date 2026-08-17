@@ -9,23 +9,14 @@ export default function ContactHero() {
   return (
     <section className="relative overflow-hidden bg-brand-bg pt-8 pb-12">
       <img
-        src={images.contactHero}
+        src={images.contactFormBg}
         alt="Night office overlooking a Canadian city skyline"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/92 to-brand-bg/45"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/80 to-brand-bg/35"
         aria-hidden="true"
       />
-      <div
-        className="pointer-events-none absolute -right-6 top-10 hidden lg:block"
-        aria-hidden="true"
-      >
-        <Mail
-          className="h-56 w-56 text-brand-accent/35 drop-shadow-[0_0_28px_rgba(47,143,255,0.45)]"
-          strokeWidth={0.9}
-        />
-      </div>
 
       <div className="container-page relative grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]">
         <div>
@@ -60,6 +51,11 @@ export default function ContactHero() {
         </div>
 
         <div className="relative z-10">
+          <Mail
+            className="pointer-events-none absolute -right-10 top-8 hidden h-44 w-44 text-brand-accent/30 lg:block"
+            strokeWidth={0.85}
+            aria-hidden="true"
+          />
           <ContactForm />
         </div>
       </div>

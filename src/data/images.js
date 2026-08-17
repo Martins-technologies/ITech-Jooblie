@@ -7,6 +7,7 @@ export const images = {
   postJobHero: '/img2.jfif',
   employersHero: '/img3.jfif',
   contactHero: '/img4.jfif',
+  contactFormBg: '/img13.jfif',
   contactHelp: '/img5.jfif',
   contactConnect: '/img6.jfif',
   contactOffice: '/img7.jfif',

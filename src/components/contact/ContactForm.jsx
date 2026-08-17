@@ -13,7 +13,7 @@ export default function ContactForm() {
   return (
     <Card
       hover={false}
-      className="border-brand-accent/40 bg-brand-card/85 p-6 shadow-[0_0_48px_-10px_rgba(47,143,255,0.55)] backdrop-blur-sm md:p-8"
+      className="relative border-white/10 bg-[#111827]/90 p-6 shadow-[0_0_48px_-10px_rgba(47,143,255,0.45)] backdrop-blur-md md:p-8"
       id="contact-form"
     >
       <h2 className="mb-6 text-xl font-bold text-brand-white">Send us a Message</h2>
