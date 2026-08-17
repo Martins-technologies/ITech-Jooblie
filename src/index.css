@@ -14,6 +14,17 @@
   ::selection {
     @apply bg-brand-accent/30 text-brand-white;
   }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  textarea:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff;
+    caret-color: #ffffff;
+    box-shadow: 0 0 0 1000px #0a1128 inset;
+    transition: background-color 9999s ease-in-out 0s;
+  }
 }
 
 @layer components {

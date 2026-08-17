@@ -13,14 +13,16 @@ export default function SignInForm({ onSuccess }) {
   const activeRole = signInRoles.find((role) => role.id === values.role) ?? signInRoles[0];
 
   return (
-    <div className="mx-auto w-full max-w-md">
+    <div className="w-full max-w-[440px]">
       <h2 className="text-3xl font-extrabold tracking-tight text-brand-white">Welcome back</h2>
-      <p className="mt-2 text-sm text-brand-muted md:text-base">{activeRole.description}</p>
+      <p className="mt-2 text-sm leading-relaxed text-brand-muted md:text-base">
+        {activeRole.description}
+      </p>
 
       <div
         role="radiogroup"
         aria-label="Sign in as"
-        className="mt-8 grid grid-cols-2 gap-3"
+        className="mt-7 grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-transparent p-1"
       >
         {signInRoles.map((role) => {
           const selected = values.role === role.id;
@@ -32,10 +34,10 @@ export default function SignInForm({ onSuccess }) {
               role="radio"
               aria-checked={selected}
               onClick={() => setRole(role.id)}
-              className={`inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-accent ${
+              className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-accent ${
                 selected
-                  ? 'border-brand-accent bg-brand-accent/10 text-brand-accent'
-                  : 'border-brand-border/40 bg-transparent text-brand-muted hover:border-brand-accent/50 hover:text-brand-white'
+                  ? 'border border-brand-accent/50 bg-brand-accent/10 text-brand-accent'
+                  : 'border border-transparent text-brand-muted hover:text-brand-white'
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -45,7 +47,7 @@ export default function SignInForm({ onSuccess }) {
         })}
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+      <form onSubmit={handleSubmit} className="mt-7 space-y-5" noValidate>
         <Input
           id="sign-in-email"
           name="email"
@@ -121,7 +123,7 @@ export default function SignInForm({ onSuccess }) {
         </Button>
       </form>
 
-      <p className="mt-8 text-center text-sm text-brand-muted">
+      <p className="mt-7 text-center text-sm text-brand-muted">
         Don&apos;t have an account?{' '}
         <Link
           to="/contact"
