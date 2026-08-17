@@ -32,9 +32,8 @@ const features = [
 
 export default function WhyChooseUsSection() {
   return (
-    <section className="relative overflow-hidden bg-brand-bg py-16 md:py-20">
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(47,143,255,0.07),transparent_60%)]" />
-      <div className="container-page relative">
+    <section className="bg-brand-bg pb-8">
+      <div className="container-page">
         <SectionHeading
           title="Why IT Professionals Choose"
           accent="iTech Jobline"

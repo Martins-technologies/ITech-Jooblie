@@ -13,11 +13,10 @@ import { heroCategories } from '../data/categories.js';
 
 export default function HomePage() {
   return (
-    <>
-      <HeroSection />
-
-      <section className="bg-brand-bg pb-12 pt-4 md:pb-16">
-        <div className="container-page space-y-10">
+    <div className="bg-brand-bg">
+      <section className="bg-brand-bg pt-4">
+        <HeroSection />
+        <div className="container-page mt-8 space-y-8 pb-8">
           <CategoryGrid items={heroCategories} columns={5} />
           <FeatureHighlights />
         </div>
@@ -26,8 +25,8 @@ export default function HomePage() {
       <WhyChooseUsSection />
       <CareerPathsSection />
 
-      <section className="bg-brand-bg py-16 md:py-20">
-        <div className="container-page grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+      <section className="bg-brand-bg">
+        <div className="container-page grid grid-cols-1 gap-6 pb-8 lg:grid-cols-2">
           <Card hover={false} className="p-6 md:p-8">
             <HowItWorksSection />
           </Card>
@@ -40,6 +39,6 @@ export default function HomePage() {
       <TestimonialsSection />
       <CareerResourcesSection />
       <CTABanner />
-    </>
+    </div>
   );
 }

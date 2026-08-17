@@ -37,7 +37,7 @@ const careerStats = [
 
 export default function CareerPathsSection() {
   return (
-    <section className="bg-brand-bgAlt py-16 md:py-20">
+    <section className="bg-brand-bg pb-8">
       <div className="container-page">
         <SectionHeading
           title="Explore Popular"
@@ -45,7 +45,7 @@ export default function CareerPathsSection() {
           subtitle="Browse roles by category and find your perfect match."
         />
         <CategoryGrid items={careerPathCategories} columns={6} />
-        <div className="mt-10">
+        <div className="mt-6">
           <StatsBar stats={careerStats} />
         </div>
       </div>

@@ -34,8 +34,8 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-brand-border/30 bg-brand-bg/95 backdrop-blur">
-      <div className="container-page flex h-16 items-center justify-between gap-4 lg:h-[72px]">
+    <header className="sticky top-0 z-50 bg-brand-bg">
+      <div className="container-page flex h-16 items-center justify-between gap-4">
         <Logo />
 
         <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">

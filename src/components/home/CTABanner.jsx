@@ -3,7 +3,7 @@ import Button from '../common/Button.jsx';
 
 export default function CTABanner() {
   return (
-    <section className="bg-brand-bg py-16 md:py-20">
+    <section className="bg-brand-bg pb-8">
       <div className="container-page">
         <div className="relative overflow-hidden rounded-2xl border border-brand-border/40 bg-brand-card px-6 py-12 text-center md:px-12">
           <div

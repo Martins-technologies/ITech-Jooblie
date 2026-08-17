@@ -4,7 +4,7 @@ import ResourceCard from './ResourceCard.jsx';
 
 export default function CareerResourcesSection() {
   return (
-    <section className="bg-brand-bgAlt py-16 md:py-20">
+    <section className="bg-brand-bg pb-8">
       <div className="container-page">
         <SectionHeading
           title="Career Resources for"

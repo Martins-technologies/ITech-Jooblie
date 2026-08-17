@@ -11,7 +11,7 @@ const trustStats = [
 
 export default function TestimonialsSection() {
   return (
-    <section className="bg-brand-bg py-16 md:py-20">
+    <section className="bg-brand-bg pb-8">
       <div className="container-page">
         <SectionHeading title="Trusted by" accent="Tech Talent" after="Across Canada" />
 
@@ -25,7 +25,7 @@ export default function TestimonialsSection() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-between">
+        <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-between">
           {trustStats.map((stat) => (
             <div key={stat.label} className="flex items-center gap-3">
               <stat.icon className="h-6 w-6 shrink-0 text-brand-accent" />

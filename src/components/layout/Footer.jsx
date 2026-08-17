@@ -37,7 +37,7 @@ function TwitterIcon({ className }) {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-brand-border/30 bg-brand-bgAlt">
+    <footer className="border-t border-brand-border/30 bg-brand-bg">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Logo />
