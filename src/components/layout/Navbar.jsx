@@ -17,7 +17,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Button to="/post-job" icon={Briefcase}>
+          <Button to="/post-job" icon={Briefcase} nav>
             Post a Job
           </Button>
           <Button to="/sign-in" variant="outline" icon={User}>
@@ -42,7 +42,7 @@ export default function Navbar() {
             <NavItems onNavigate={() => setOpen(false)} />
           </nav>
           <div className="mt-5 flex flex-col gap-3">
-            <Button to="/post-job" icon={Briefcase} onClick={() => setOpen(false)}>
+            <Button to="/post-job" icon={Briefcase} nav onClick={() => setOpen(false)}>
               Post a Job
             </Button>
             <Button

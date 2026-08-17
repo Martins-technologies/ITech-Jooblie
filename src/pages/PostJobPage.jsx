@@ -1,15 +1,19 @@
-import PostJobHero from '../components/post-job/PostJobHero.jsx';
-import HowPostingWorksSection from '../components/post-job/HowPostingWorksSection.jsx';
-import EmployerFeaturesSection from '../components/post-job/EmployerFeaturesSection.jsx';
-import EmployerCTABanner from '../components/post-job/EmployerCTABanner.jsx';
+import PostJobHero from '../components/sections/post-job/PostJobHero.jsx';
+import HowPostingWorks from '../components/sections/post-job/HowPostingWorks.jsx';
+import WhyEmployersChoose from '../components/sections/post-job/WhyEmployersChoose.jsx';
+import PricingPlans from '../components/sections/post-job/PricingPlans.jsx';
+import EmployerTestimonials from '../components/sections/post-job/EmployerTestimonials.jsx';
+import ClosingCtaFaq from '../components/sections/post-job/ClosingCtaFaq.jsx';
 
 export default function PostJobPage() {
   return (
     <div className="bg-brand-bg">
       <PostJobHero />
-      <HowPostingWorksSection />
-      <EmployerFeaturesSection />
-      <EmployerCTABanner />
+      <HowPostingWorks />
+      <WhyEmployersChoose />
+      <PricingPlans />
+      <EmployerTestimonials />
+      <ClosingCtaFaq />
     </div>
   );
 }

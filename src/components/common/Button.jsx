@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const variants = {
   primary:
@@ -20,6 +20,7 @@ export default function Button({
   icon: Icon,
   to,
   href,
+  nav = false,
   children,
   type = 'button',
   className = '',
@@ -39,6 +40,20 @@ export default function Button({
       <a href={href} className={classes} {...props}>
         {content}
       </a>
+    );
+  }
+
+  if (to && nav) {
+    return (
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          `${classes} ${isActive ? 'ring-2 ring-brand-accent ring-offset-2 ring-offset-brand-bg' : ''}`
+        }
+        {...props}
+      >
+        {content}
+      </NavLink>
     );
   }
 

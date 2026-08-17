@@ -46,7 +46,7 @@ The app starts at http://localhost:5173.
 ```
 src/
   assets/          Static images and SVGs
-  components/      Reusable UI for layout, common, home, jobs, contact, and post-job sections
+  components/      Reusable UI for layout, common, home, jobs, contact, about, and post-job sections
   data/            Nav links, jobs, testimonials, image paths, and other content
   hooks/           Form and job-search hooks
   pages/           Route level page components
@@ -86,7 +86,7 @@ public/
 Completed modules
 
 1. Home (/)
-2. Post a Job (/post-job)
+2. Post a Job (/post-job) — Module 4: hero form, how posting works, pricing plans, employer testimonials, and FAQ
 3. Employers (/employers)
 4. Contact Us (/contact)
 5. Browse Jobs (/jobs)
@@ -96,8 +96,7 @@ Still to come
 
 1. Job details (/jobs/:jobId currently shows a placeholder)
 2. Sign In / authentication
-3. Create Job Post form
-4. Real API integration
+3. Real API integration (job posts, pricing checkout, and contact submissions)
 
 Canonical logo and footer (Module 3): the shared Logo.jsx stacked iTech / JOBLINE badge and the 5-column Footer.jsx (Quick Links, Popular IT Jobs, Contact, Legal) are the current source of truth for every page.
 

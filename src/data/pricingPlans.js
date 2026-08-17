@@ -1,0 +1,48 @@
+export const pricingPlans = [
+  {
+    id: 'starter',
+    name: 'Starter',
+    description: 'Perfect for small teams and occasional hiring.',
+    price: 99,
+    highlighted: false,
+    features: [
+      { label: '1 Job Post' },
+      { label: 'Standard Job Listing' },
+      { label: '30-Day Listing Duration' },
+      { label: 'Applicant Access' },
+      { label: 'Employer Dashboard Access' },
+      { label: 'Email Support' },
+    ],
+  },
+  {
+    id: 'growth',
+    name: 'Growth',
+    description: 'Great for growing companies hiring regularly.',
+    price: 199,
+    highlighted: true,
+    features: [
+      { label: '5 Job Posts' },
+      { label: 'Featured Job Listing', starred: true },
+      { label: '30-Day Listing Duration' },
+      { label: 'Applicant Access' },
+      { label: 'Employer Dashboard Access' },
+      { label: 'Priority Email Support' },
+    ],
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    description: 'For teams with high-volume hiring needs.',
+    price: 399,
+    highlighted: false,
+    features: [
+      { label: '20 Job Posts' },
+      { label: 'Featured Job Listings', starred: true },
+      { label: '60-Day Listing Duration' },
+      { label: 'Applicant Access' },
+      { label: 'Employer Dashboard Access' },
+      { label: 'Priority Support' },
+      { label: 'Custom Branding (Optional)' },
+    ],
+  },
+];
