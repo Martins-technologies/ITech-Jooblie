@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-brand-bg font-sans text-brand-white antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand-accent/30 text-brand-white;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  textarea:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff;
+    caret-color: #ffffff;
+    box-shadow: 0 0 0 1000px #0a1128 inset;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 md:px-8 lg:px-12;
+  }
+
+  /* Shared gap between the sticky navbar and every page hero */
+  .page-hero {
+    @apply pt-12 lg:pt-16;
+  }
+
+  .section-alt {
+    @apply bg-brand-bgAlt;
+  }
+}
