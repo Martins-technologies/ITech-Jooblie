@@ -13,7 +13,7 @@ export default function JobCategories() {
   const [alertOpen, setAlertOpen] = useState(false);
 
   return (
-    <section className="relative overflow-hidden bg-brand-bg py-12">
+    <section id="job-categories" className="relative scroll-mt-24 overflow-hidden bg-brand-bg py-12">
       <CodeBracketGraphic className="pointer-events-none absolute right-4 top-8 hidden h-32 w-48 md:block" />
 
       <div className="container-page relative">
@@ -65,7 +65,14 @@ export default function JobCategories() {
               </div>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button to="/jobs" icon={LayoutGrid}>
+              <Button
+                icon={LayoutGrid}
+                onClick={() =>
+                  document
+                    .getElementById('job-categories')
+                    ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }
+              >
                 Browse All Categories
               </Button>
               <Button variant="outline" icon={Bell} onClick={() => setAlertOpen(true)}>

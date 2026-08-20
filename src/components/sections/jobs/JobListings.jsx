@@ -25,7 +25,7 @@ export default function JobListings({ jobs, filters, hasActiveSearch }) {
       return sorted.slice(start, start + perPage);
     }
     return Array.from({ length: Math.min(perPage, sorted.length) }, (_, index) => {
-      const source = sorted[index % sorted.length];
+      const source = sorted[(start + index) % sorted.length];
       return source;
     });
   }, [sorted, currentPage, perPage, filtersActive]);

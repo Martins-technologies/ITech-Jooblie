@@ -31,7 +31,7 @@ export default function EmployersHero() {
               Post a Job
             </Button>
             <Button
-              href="mailto:hello@itechjobline.ca"
+              to="/contact#contact-form"
               variant="outline"
               icon={MessageCircle}
             >
