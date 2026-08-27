@@ -8,7 +8,8 @@ import Checkbox from '../../common/Checkbox.jsx';
 import Input from '../../common/Input.jsx';
 
 export default function SignInForm({ onSuccess }) {
-  const { values, errors, update, setRole, handleSubmit } = useSignInForm(onSuccess);
+  const { values, errors, loading, submitError, update, setRole, handleSubmit } =
+    useSignInForm(onSuccess);
   const [showPassword, setShowPassword] = useState(false);
   const activeRole = signInRoles.find((role) => role.id === values.role) ?? signInRoles[0];
 
@@ -117,11 +118,18 @@ export default function SignInForm({ onSuccess }) {
           </Link>
         </div>
 
-        <Button type="submit" variant="gradient" className="w-full">
-          Log In
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        {submitError && (
+          <div className="text-sm text-red-400 border border-red-500/20 bg-red-500/5 rounded-lg p-3">
+            {submitError}
+          </div>
+        )}
+
+        <Button type="submit" variant="gradient" className="w-full" disabled={loading}>
+          {loading ? 'Logging In...' : 'Log In'}
+          {!loading && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
         </Button>
       </form>
+
 
       <p className="mt-7 text-center text-sm text-brand-muted">
         Don&apos;t have an account?{' '}

@@ -2,13 +2,15 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from '../components/layout/Layout.jsx';
 import HomePage from '../pages/HomePage.jsx';
 import JobsPage from '../pages/JobsPage.jsx';
-import JobDetailsPlaceholderPage from '../pages/JobDetailsPlaceholderPage.jsx';
+import JobDetailsPage from '../pages/JobDetailsPage.jsx';
 import EmployersPage from '../pages/EmployersPage.jsx';
 import AboutPage from '../pages/AboutPage.jsx';
 import ContactUsPage from '../pages/ContactUsPage.jsx';
 import SignInPage from '../pages/SignInPage.jsx';
 import PostJobPage from '../pages/PostJobPage.jsx';
 import CreateJobPostPage from '../pages/CreateJobPostPage.jsx';
+import DashboardHome from '../pages/dashboard/DashboardHome.jsx';
+import RecruiterHome from '../pages/recruiter/RecruiterHome.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 
 /**
@@ -20,15 +22,18 @@ export default function AppRoutes() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/jobs" element={<JobsPage />} />
-        <Route path="/jobs/:jobId" element={<JobDetailsPlaceholderPage />} />
+        <Route path="/jobs/:jobId" element={<JobDetailsPage />} />
         <Route path="/employers" element={<EmployersPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactUsPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/post-job" element={<PostJobPage />} />
         <Route path="/post-job/create" element={<CreateJobPostPage />} />
+        <Route path="/dashboard" element={<DashboardHome />} />
+        <Route path="/recruiter" element={<RecruiterHome />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
 }
+

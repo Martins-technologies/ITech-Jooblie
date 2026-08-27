@@ -7,28 +7,21 @@ import JobResultsHeader from './JobResultsHeader.jsx';
 import JobCard from './JobCard.jsx';
 import Pagination from './Pagination.jsx';
 
-export default function JobListings({ jobs, filters, hasActiveSearch }) {
+export default function JobListings({ jobs, filters, loading, error }) {
   const [sortBy, setSortBy] = useState('recent');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(12);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const sorted = useMemo(() => sortJobs(jobs, sortBy), [jobs, sortBy]);
-  const filtersActive = hasActiveSearch || hasSidebarFilters(filters.applied);
-  const displayTotal = filtersActive ? sorted.length : SIMULATED_TOTAL_JOBS;
+  const displayTotal = sorted.length;
   const totalPages = Math.max(1, Math.ceil(displayTotal / perPage));
   const currentPage = Math.min(page, totalPages);
 
   const pageJobs = useMemo(() => {
     const start = (currentPage - 1) * perPage;
-    if (filtersActive) {
-      return sorted.slice(start, start + perPage);
-    }
-    return Array.from({ length: Math.min(perPage, sorted.length) }, (_, index) => {
-      const source = sorted[(start + index) % sorted.length];
-      return source;
-    });
-  }, [sorted, currentPage, perPage, filtersActive]);
+    return sorted.slice(start, start + perPage);
+  }, [sorted, currentPage, perPage]);
 
   useEffect(() => {
     setPage(1);
@@ -65,7 +58,15 @@ export default function JobListings({ jobs, filters, hasActiveSearch }) {
               onSortChange={setSortBy}
             />
 
-            {pageJobs.length ? (
+            {loading ? (
+              <p className="rounded-xl border border-brand-border/40 bg-brand-card p-8 text-center text-brand-muted">
+                Loading jobs...
+              </p>
+            ) : error ? (
+              <p className="rounded-xl border border-red-400/40 bg-brand-card p-8 text-center text-red-400">
+                {error}
+              </p>
+            ) : pageJobs.length ? (
               <div className="space-y-4">
                 {pageJobs.map((job) => (
                   <JobCard key={job.id} job={job} />
@@ -87,6 +88,7 @@ export default function JobListings({ jobs, filters, hasActiveSearch }) {
           </div>
         </div>
       </div>
+
 
       {drawerOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
@@ -123,15 +125,3 @@ export default function JobListings({ jobs, filters, hasActiveSearch }) {
   );
 }
 
-function hasSidebarFilters(applied) {
-  return Boolean(
-    applied.keyword ||
-      applied.jobType ||
-      applied.experience ||
-      applied.workModel ||
-      applied.salaryRange ||
-      applied.location ||
-      applied.jobTypes?.length ||
-      applied.workModels?.length,
-  );
-}

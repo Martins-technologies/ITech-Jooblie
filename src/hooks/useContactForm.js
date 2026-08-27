@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../lib/api.js';
 
 const initialValues = {
   name: '',
@@ -30,10 +31,18 @@ export default function useContactForm(onSubmit) {
     return Object.keys(next).length === 0;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validate()) return;
-    console.log(values);
+    console.log('Sending contact inquiry:', values);
+    try {
+      await api('/v1/contact', {
+        method: 'POST',
+        body: values,
+      });
+    } catch (err) {
+      console.error('Contact inquiry backend submission failed', err);
+    }
     onSubmit?.(values);
     setSubmitted(true);
     setValues(initialValues);
@@ -41,3 +50,4 @@ export default function useContactForm(onSubmit) {
 
   return { values, errors, submitted, update, handleSubmit };
 }
+
