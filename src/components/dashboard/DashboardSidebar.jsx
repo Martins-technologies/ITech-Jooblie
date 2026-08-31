@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Bookmark,
-  Briefcase,
-  ChevronDown,
   FileText,
   LayoutDashboard,
   LogOut,
@@ -26,20 +23,13 @@ const seekerWorkspaceLinks = [
   { to: '/dashboard/profile', label: 'My Profile', icon: Users },
 ];
 
-const communityLinks = [
-  { to: '/about', label: 'Settlement Resources' },
-  { to: '/contact', label: 'Mentorship' },
-];
-
 export default function DashboardSidebar({
   open,
   onClose,
   workspaceLinks = seekerWorkspaceLinks,
   settingsPath = '/dashboard/settings',
   roleLabel = 'Job Seeker',
-  showCommunity = true,
 }) {
-  const [communityOpen, setCommunityOpen] = useState(false);
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -66,35 +56,6 @@ export default function DashboardSidebar({
             <SidebarNavItem key={link.to} {...link} onNavigate={onClose} />
           ))}
         </div>
-
-        {showCommunity ? (
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => setCommunityOpen((current) => !current)}
-              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-wider text-brand-muted hover:text-brand-white focus-visible:ring-2 focus-visible:ring-brand-accent"
-              aria-expanded={communityOpen}
-            >
-              Community
-              <ChevronDown
-                className={`h-4 w-4 transition-transform ${communityOpen ? 'rotate-180' : ''}`}
-              />
-            </button>
-            {communityOpen ? (
-              <div className="mt-1 space-y-1 pl-2">
-                {communityLinks.map((link) => (
-                  <SidebarNavItem
-                    key={link.to}
-                    to={link.to}
-                    label={link.label}
-                    icon={Briefcase}
-                    onNavigate={onClose}
-                  />
-                ))}
-              </div>
-            ) : null}
-          </div>
-        ) : null}
       </nav>
 
       <div className="border-t border-white/10 p-4 space-y-1">

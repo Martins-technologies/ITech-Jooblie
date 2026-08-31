@@ -19,11 +19,4 @@ export const employerSidebarConfig = {
   workspaceLinks: employerWorkspaceLinks,
   settingsPath: '/employer-dashboard/settings',
   roleLabel: 'Employer',
-  showCommunity: false,
-};
-
-export const seekerSidebarConfig = {
-  settingsPath: '/dashboard/settings',
-  roleLabel: 'Job Seeker',
-  showCommunity: true,
 };
