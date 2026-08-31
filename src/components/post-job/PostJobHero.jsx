@@ -1,7 +1,7 @@
 import { Users, Send, MessageCircle } from 'lucide-react';
 import { images } from '../../data/images.js';
 import { heroCopy, heroFeatures } from '../../data/postJobPage.js';
-import Badge from '../common/Badge.jsx';
+import SectionEyebrow from '../common/SectionEyebrow.jsx';
 import Button from '../common/Button.jsx';
 import MapleLeafIcon from '../common/MapleLeafIcon.jsx';
 import EmployerFeatureCard from './EmployerFeatureCard.jsx';
@@ -12,9 +12,9 @@ export default function PostJobHero() {
     <section className="page-hero bg-brand-bg">
       <div className="container-page grid items-center gap-8 lg:grid-cols-2">
         <div>
-          <Badge icon={Users}>{heroCopy.badge}</Badge>
+          <SectionEyebrow label="Post a Job" />
 
-          <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl">
+          <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
             {heroCopy.title}{' '}
             <span className="text-brand-accent">{heroCopy.accent}</span>{' '}
             {heroCopy.after}
