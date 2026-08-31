@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Briefcase, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { ArrowRight, Briefcase, Eye, EyeOff, Lock, User } from 'lucide-react';
 import { signInRoles } from '../../../data/signInContent.js';
 import useSignInForm from '../../../hooks/useSignInForm.js';
 import Button from '../../common/Button.jsx';
@@ -8,8 +8,7 @@ import Checkbox from '../../common/Checkbox.jsx';
 import Input from '../../common/Input.jsx';
 
 export default function SignInForm({ onSuccess }) {
-  const { values, errors, loading, submitError, update, setRole, handleSubmit } =
-    useSignInForm(onSuccess);
+  const { values, loading, update, setRole, handleSubmit } = useSignInForm(onSuccess);
   const [showPassword, setShowPassword] = useState(false);
   const activeRole = signInRoles.find((role) => role.id === values.role) ?? signInRoles[0];
 
@@ -50,19 +49,6 @@ export default function SignInForm({ onSuccess }) {
 
       <form onSubmit={handleSubmit} className="mt-7 space-y-5" noValidate>
         <Input
-          id="sign-in-email"
-          name="email"
-          type="email"
-          label="Email address"
-          required
-          icon={Mail}
-          placeholder="you@example.com"
-          autoComplete="email"
-          value={values.email}
-          onChange={update('email')}
-          error={errors.email}
-        />
-        <Input
           id="sign-in-username"
           name="username"
           type="text"
@@ -73,7 +59,6 @@ export default function SignInForm({ onSuccess }) {
           autoComplete="username"
           value={values.username}
           onChange={update('username')}
-          error={errors.username}
         />
         <Input
           id="sign-in-password"
@@ -86,7 +71,6 @@ export default function SignInForm({ onSuccess }) {
           autoComplete="current-password"
           value={values.password}
           onChange={update('password')}
-          error={errors.password}
           suffix={
             <button
               type="button"
@@ -117,12 +101,6 @@ export default function SignInForm({ onSuccess }) {
             Forgot password?
           </Link>
         </div>
-
-        {submitError && (
-          <div className="text-sm text-red-400 border border-red-500/20 bg-red-500/5 rounded-lg p-3">
-            {submitError}
-          </div>
-        )}
 
         <Button type="submit" variant="gradient" className="w-full" disabled={loading}>
           {loading ? 'Logging In...' : 'Log In'}

@@ -30,7 +30,7 @@ export const footerColumns = {
       { label: 'Post a Job', to: '/post-job' },
       { label: 'Search Resumes', to: '/employers' },
       { label: 'Pricing Plans', to: '/post-job#pricing-plans' },
-      { label: 'Employer Dashboard', to: '/sign-in' },
+      { label: 'Employer Dashboard', to: '/employer-dashboard/overview' },
       { label: 'Success Stories', to: '/about' },
       { label: 'Recruitment Tips', to: '/employers' },
     ],

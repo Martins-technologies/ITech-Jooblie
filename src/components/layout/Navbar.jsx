@@ -10,7 +10,9 @@ export default function Navbar() {
   const { isAuthenticated, user, signOut } = useAuth();
 
   const dashboardPath =
-    user?.role === 'employer' || user?.role === 'recruiter' ? '/recruiter' : '/dashboard';
+    user?.role === 'employer' || user?.role === 'recruiter'
+      ? '/employer-dashboard/overview'
+      : '/dashboard/overview';
 
   return (
     <header className="sticky top-0 z-50 bg-brand-bg">

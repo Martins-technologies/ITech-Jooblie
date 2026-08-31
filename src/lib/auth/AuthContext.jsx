@@ -38,21 +38,29 @@ export function AuthProvider({ children }) {
     }
   }, [session, signOut]);
 
-  const signIn = useCallback(async (email, password) => {
-    const res = await api('/v1/auth/login', {
-      method: 'POST',
-      body: { email, password },
-    });
+  const signIn = useCallback(async (username, password, role = 'seeker') => {
+    const mockRole = role === 'employer' ? 'employer' : 'seeker';
     const nextSession = {
-      accessToken: res.session.access_token,
-      refreshToken: res.session.refresh_token,
-      expiresAt: res.session.expires_at,
-      user: res.user,
-      profile: res.user,
+      accessToken: 'mock-access-token',
+      refreshToken: 'mock-refresh-token',
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      isMock: true,
+      user: {
+        id: 'mock-user',
+        username: username.trim() || 'user',
+        full_name: username.trim() || 'User',
+        role: mockRole,
+      },
+      profile: {
+        id: 'mock-user',
+        username: username.trim() || 'user',
+        full_name: username.trim() || 'User',
+        role: mockRole,
+      },
     };
     setSession(nextSession);
     writeSession(nextSession);
-    return res;
+    return { user: nextSession.user, session: nextSession };
   }, []);
 
   const signUp = useCallback(async (email, password, fullName, role) => {
@@ -78,6 +86,10 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function initSession() {
       if (!session?.accessToken) {
+        setLoading(false);
+        return;
+      }
+      if (session.isMock) {
         setLoading(false);
         return;
       }

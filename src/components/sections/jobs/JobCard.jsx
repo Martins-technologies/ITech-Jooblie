@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BadgeCheck, Briefcase, MapPin } from 'lucide-react';
+import { BadgeCheck, Bookmark, Briefcase, CheckCircle, MapPin } from 'lucide-react';
 import Card from '../../common/Card.jsx';
 import Button from '../../common/Button.jsx';
 import CompanyLogoBadge from './CompanyLogoBadge.jsx';
@@ -15,8 +15,23 @@ const pillClass = {
   Internship: 'border-brand-accent/60 text-brand-accent',
 };
 
-export default function JobCard({ job }) {
+export default function JobCard({
+  job,
+  isApplied = false,
+  isSaved = false,
+  onApply,
+  onToggleSave,
+}) {
   const [applyOpen, setApplyOpen] = useState(false);
+  const dashboardMode = Boolean(onApply || onToggleSave);
+
+  const handleApply = () => {
+    if (onApply) {
+      onApply(job);
+      return;
+    }
+    setApplyOpen(true);
+  };
 
   return (
     <>
@@ -69,18 +84,40 @@ export default function JobCard({ job }) {
               </span>
             ) : null}
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {onToggleSave ? (
+              <button
+                type="button"
+                onClick={() => onToggleSave(job)}
+                className={`rounded-lg border p-2 transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
+                  isSaved
+                    ? 'border-brand-accent bg-brand-accent/10 text-brand-accent'
+                    : 'border-white/10 text-brand-muted hover:text-brand-white'
+                }`}
+                aria-label={isSaved ? 'Remove from saved jobs' : 'Save job'}
+                aria-pressed={isSaved}
+              >
+                <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+              </button>
+            ) : null}
             <Button to={`/jobs/${job.id}`} variant="outline" className="px-4 py-2">
               View Details
             </Button>
-            <Button variant="accent" className="px-4 py-2" onClick={() => setApplyOpen(true)}>
-              Apply Now
-            </Button>
+            {isApplied ? (
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-status-success/40 bg-status-success/10 px-4 py-2 text-sm font-semibold text-status-success">
+                <CheckCircle className="h-4 w-4" />
+                Applied
+              </span>
+            ) : (
+              <Button variant="accent" className="px-4 py-2" onClick={handleApply}>
+                Apply Now
+              </Button>
+            )}
           </div>
         </div>
       </Card>
 
-      {applyOpen ? (
+      {!dashboardMode && applyOpen ? (
         <ApplyModal job={job} onClose={() => setApplyOpen(false)} />
       ) : null}
     </>
