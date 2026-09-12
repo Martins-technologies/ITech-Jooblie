@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { images } from '../../data/images.js';
 import { popularSearches } from '../../data/categories.js';
-import Badge from '../common/Badge.jsx';
-import MapleLeafIcon from '../common/MapleLeafIcon.jsx';
+import SectionEyebrow from '../common/SectionEyebrow.jsx';
 import SearchBar from './SearchBar.jsx';
 import PopularSearches from './PopularSearches.jsx';
 
@@ -18,9 +17,9 @@ export default function HeroSection() {
   return (
     <div className="container-page grid items-center gap-8 lg:grid-cols-2">
       <div>
-        <Badge icon={MapleLeafIcon}>Canada&apos;s IT Job Destination</Badge>
+        <SectionEyebrow label="Home" />
 
-        <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
+        <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
           Find <span className="text-brand-accent">Top IT Jobs</span> Across Canada
         </h1>
 

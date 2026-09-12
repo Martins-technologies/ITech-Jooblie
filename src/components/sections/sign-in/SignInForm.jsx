@@ -1,22 +1,30 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Briefcase, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { ArrowRight, Briefcase, Eye, EyeOff, Lock, Mail, User, Building2, Globe } from 'lucide-react';
 import { signInRoles } from '../../../data/signInContent.js';
 import useSignInForm from '../../../hooks/useSignInForm.js';
 import Button from '../../common/Button.jsx';
 import Checkbox from '../../common/Checkbox.jsx';
 import Input from '../../common/Input.jsx';
+import InlineNotice from '../../common/InlineNotice.jsx';
 
 export default function SignInForm({ onSuccess }) {
-  const { values, errors, update, setRole, handleSubmit } = useSignInForm(onSuccess);
+  const { values, loading, error, notice, update, setRole, setMode, handleSubmit } = useSignInForm(onSuccess);
   const [showPassword, setShowPassword] = useState(false);
+  const isSignup = values.mode === 'signup';
   const activeRole = signInRoles.find((role) => role.id === values.role) ?? signInRoles[0];
 
   return (
     <div className="w-full max-w-[440px]">
-      <h2 className="text-3xl font-extrabold tracking-tight text-brand-white">Welcome back</h2>
+      <h2 className="text-3xl font-extrabold tracking-tight text-brand-white">
+        {isSignup ? 'Create an account' : 'Welcome back'}
+      </h2>
       <p className="mt-2 text-sm leading-relaxed text-brand-muted md:text-base">
-        {activeRole.description}
+        {isSignup
+          ? values.role === 'employer'
+            ? 'Register your company to post IT roles and review applicants.'
+            : 'Create a job seeker account to apply and save IT jobs.'
+          : activeRole.description}
       </p>
 
       <div
@@ -48,31 +56,32 @@ export default function SignInForm({ onSuccess }) {
       </div>
 
       <form onSubmit={handleSubmit} className="mt-7 space-y-5" noValidate>
+        {isSignup ? (
+          <Input
+            id="sign-up-name"
+            name="name"
+            type="text"
+            label="Full name"
+            required
+            icon={User}
+            placeholder="Jane Doe"
+            autoComplete="name"
+            value={values.name}
+            onChange={update('name')}
+          />
+        ) : null}
+
         <Input
           id="sign-in-email"
           name="email"
           type="email"
-          label="Email address"
+          label="Email"
           required
           icon={Mail}
           placeholder="you@example.com"
           autoComplete="email"
           value={values.email}
           onChange={update('email')}
-          error={errors.email}
-        />
-        <Input
-          id="sign-in-username"
-          name="username"
-          type="text"
-          label="Username"
-          required
-          icon={User}
-          placeholder="your.username"
-          autoComplete="username"
-          value={values.username}
-          onChange={update('username')}
-          error={errors.username}
         />
         <Input
           id="sign-in-password"
@@ -81,11 +90,10 @@ export default function SignInForm({ onSuccess }) {
           label="Password"
           required
           icon={Lock}
-          placeholder="Enter your password"
-          autoComplete="current-password"
+          placeholder="At least 8 characters"
+          autoComplete={isSignup ? 'new-password' : 'current-password'}
           value={values.password}
           onChange={update('password')}
-          error={errors.password}
           suffix={
             <button
               type="button"
@@ -102,35 +110,91 @@ export default function SignInForm({ onSuccess }) {
           }
         />
 
-        <div className="flex items-center justify-between gap-3">
-          <Checkbox
-            id="sign-in-remember"
-            label="Remember me"
-            checked={values.remember}
-            onChange={update('remember')}
-          />
-          <Link
-            to="/contact"
-            className="text-sm font-semibold text-brand-accent hover:text-brand-accentHover focus-visible:ring-2 focus-visible:ring-brand-accent"
-          >
-            Forgot password?
-          </Link>
-        </div>
+        {isSignup && values.role === 'employer' ? (
+          <>
+            <Input
+              id="sign-up-company"
+              name="company_name"
+              label="Company name"
+              required
+              icon={Building2}
+              placeholder="Acme Inc"
+              value={values.company_name}
+              onChange={update('company_name')}
+            />
+            <Input
+              id="sign-up-website"
+              name="company_website"
+              type="url"
+              label="Company website"
+              required
+              icon={Globe}
+              placeholder="https://company.example"
+              value={values.company_website}
+              onChange={update('company_website')}
+            />
+            <Input
+              id="sign-up-registration"
+              name="company_registration_number"
+              label="Registration number"
+              required
+              placeholder="Business registration number"
+              value={values.company_registration_number}
+              onChange={update('company_registration_number')}
+            />
+          </>
+        ) : null}
 
-        <Button type="submit" variant="gradient" className="w-full">
-          Log In
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        {!isSignup ? (
+          <div className="flex items-center justify-between gap-3">
+            <Checkbox
+              id="sign-in-remember"
+              label="Remember me"
+              checked={values.remember}
+              onChange={update('remember')}
+            />
+            <Link
+              to="/contact"
+              className="text-sm font-semibold text-brand-accent hover:text-brand-accentHover focus-visible:ring-2 focus-visible:ring-brand-accent"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        ) : null}
+
+        <InlineNotice tone="error">{error}</InlineNotice>
+        <InlineNotice tone="success">{notice}</InlineNotice>
+
+        <Button type="submit" variant="gradient" className="w-full" disabled={loading}>
+          {loading ? (isSignup ? 'Creating account...' : 'Logging In...') : isSignup ? 'Create account' : 'Log In'}
+          {!loading && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
         </Button>
       </form>
 
       <p className="mt-7 text-center text-sm text-brand-muted">
-        Don&apos;t have an account?{' '}
-        <Link
-          to="/contact"
-          className="font-semibold text-brand-accent hover:text-brand-accentHover focus-visible:ring-2 focus-visible:ring-brand-accent"
-        >
-          Sign up
-        </Link>
+        {isSignup ? (
+          <>
+            Already have an account?{' '}
+            <button
+              type="button"
+              className="font-semibold text-brand-accent hover:text-brand-accentHover"
+              onClick={() => setMode('signin')}
+            >
+              Sign in
+            </button>
+          </>
+        ) : (
+          <>
+            Don&apos;t have an account?{' '}
+            <button
+              type="button"
+              className="font-semibold text-brand-accent hover:text-brand-accentHover"
+              onClick={() => setMode('signup')}
+            >
+              Sign up
+            </button>
+          </>
+        )}
       </p>
     </div>
   );

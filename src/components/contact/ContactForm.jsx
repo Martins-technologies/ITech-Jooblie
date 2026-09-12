@@ -1,12 +1,13 @@
 import { Send } from 'lucide-react';
 import { subjectOptions } from '../../data/officeInfo.js';
 import useContactForm from '../../hooks/useContactForm.js';
+import LoadingSpinner from '../common/LoadingSpinner.jsx';
 
 const fieldClass =
   'w-full rounded-lg border border-white/15 bg-[#0b111e] px-3.5 py-2.5 text-sm text-white outline-none placeholder:text-[#6b7280] focus:border-brand-accent';
 
 export default function ContactForm() {
-  const { values, errors, submitted, update, handleSubmit } = useContactForm();
+  const { values, errors, submitted, formError, loading, update, handleSubmit } = useContactForm();
 
   return (
     <div
@@ -82,11 +83,13 @@ export default function ContactForm() {
 
           <button
             type="submit"
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-accent text-sm font-bold text-white transition-colors hover:bg-brand-accentHover"
+            disabled={loading}
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-accent text-sm font-bold text-white transition-colors hover:bg-brand-accentHover disabled:opacity-50"
           >
-            <Send className="h-4 w-4" aria-hidden="true" />
-            Send Message
+            {loading ? <LoadingSpinner label="" /> : <Send className="h-4 w-4" aria-hidden="true" />}
+            {loading ? 'Sending...' : 'Send Message'}
           </button>
+          {formError ? <p className="text-xs text-red-400">{formError}</p> : null}
         </form>
       )}
     </div>

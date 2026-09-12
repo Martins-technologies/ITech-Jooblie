@@ -1,67 +1,101 @@
 import { useState } from 'react';
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const USERNAME_PATTERN = /^[a-zA-Z0-9._-]{3,30}$/;
+import { useAuth } from '../lib/auth/AuthContext.jsx';
+import { formatApiError, isValidEmail } from '../lib/formValidation.js';
 
 const initialValues = {
+  mode: 'signin',
   role: 'seeker',
-  username: '',
   email: '',
   password: '',
+  name: '',
+  company_name: '',
+  company_website: '',
+  company_registration_number: '',
   remember: false,
 };
 
 export default function useSignInForm(onSubmit) {
+  const { signIn, signUp } = useAuth();
   const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
 
   const update = (field) => (event) => {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     setValues((current) => ({ ...current, [field]: value }));
-    setErrors((current) => ({ ...current, [field]: undefined }));
+    setError('');
+    setNotice('');
   };
 
   const setRole = (role) => {
     setValues((current) => ({ ...current, role }));
+    setError('');
   };
 
-  const validate = () => {
-    const next = {};
-    const username = values.username.trim();
-    const email = values.email.trim();
-
-    if (!username) next.username = 'Please enter your username.';
-    else if (!USERNAME_PATTERN.test(username)) {
-      next.username =
-        'Username must be 3–30 characters and can include letters, numbers, dots, hyphens, and underscores.';
-    }
-
-    if (!email) next.email = 'Please enter your email address.';
-    else if (!EMAIL_PATTERN.test(email)) {
-      next.email = 'Please enter a valid email address.';
-    }
-
-    if (!values.password) next.password = 'Please enter your password.';
-    else if (values.password.length < 8) {
-      next.password = 'Password must be at least 8 characters.';
-    }
-
-    setErrors(next);
-    return Object.keys(next).length === 0;
+  const setMode = (mode) => {
+    setValues((current) => ({ ...current, mode }));
+    setError('');
+    setNotice('');
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!validate()) return;
-    const payload = {
-      role: values.role,
-      username: values.username.trim(),
-      email: values.email.trim(),
-      remember: values.remember,
-    };
-    console.log(payload);
-    onSubmit?.(payload);
+    setLoading(true);
+    setError('');
+    setNotice('');
+
+    try {
+      if (values.mode === 'signin' && !isValidEmail(values.email)) {
+        throw new Error('Enter a valid email address.');
+      }
+      if (values.mode === 'signin' && !values.password) {
+        throw new Error('Enter your password.');
+      }
+
+      if (values.mode === 'signup') {
+        if (!isValidEmail(values.email)) {
+          throw new Error('Enter a valid email address.');
+        }
+        if (values.password.length < 8) {
+          throw new Error('Password must be at least 8 characters.');
+        }
+        if (!values.name.trim() || values.name.trim().length < 2) {
+          throw new Error('Please enter your full name.');
+        }
+        if (values.role === 'employer') {
+          if (!values.company_name.trim()) throw new Error('Company name is required.');
+          if (!values.company_website.trim()) throw new Error('Company website is required.');
+          if (!values.company_registration_number.trim()) {
+            throw new Error('Company registration number is required.');
+          }
+        }
+        const res = await signUp({
+          email: values.email.trim(),
+          password: values.password,
+          name: values.name.trim(),
+          role: values.role,
+          company_name: values.company_name.trim(),
+          company_website: values.company_website.trim(),
+          company_registration_number: values.company_registration_number.trim(),
+        });
+        if (res.confirmationRequired || !res.session) {
+          setNotice('Account created. Check your email to confirm before signing in.');
+          setValues((current) => ({ ...current, mode: 'signin', password: '' }));
+          return;
+        }
+        onSubmit?.(res.session.user.role);
+        return;
+      }
+
+      const session = await signIn(values.email.trim(), values.password);
+      onSubmit?.(session.user.role);
+    } catch (err) {
+      setError(formatApiError(err, 'Unable to complete that request.'));
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return { values, errors, update, setRole, handleSubmit };
+  return { values, loading, error, notice, update, setRole, setMode, handleSubmit };
 }

@@ -1,9 +1,8 @@
 import { Briefcase, MessageCircle } from 'lucide-react';
 import { images } from '../../data/images.js';
 import { heroCopy } from '../../data/employersPage.js';
-import Badge from '../common/Badge.jsx';
+import SectionEyebrow from '../common/SectionEyebrow.jsx';
 import Button from '../common/Button.jsx';
-import MapleLeafIcon from '../common/MapleLeafIcon.jsx';
 import CanadaMapDecor from './CanadaMapDecor.jsx';
 import EmployerFeatureHighlights from './EmployerFeatureHighlights.jsx';
 
@@ -12,11 +11,9 @@ export default function EmployersHero() {
     <section className="page-hero bg-brand-bg">
       <div className="container-page grid items-center gap-8 lg:grid-cols-12">
         <div className="lg:col-span-7">
-          <Badge icon={MapleLeafIcon}>
-            <span className="text-brand-accent">{heroCopy.badge}</span>
-          </Badge>
+          <SectionEyebrow label="Employers" />
 
-          <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
+          <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
             {heroCopy.title}{' '}
             <span className="text-brand-accent">{heroCopy.accent}</span>{' '}
             {heroCopy.after}
@@ -31,7 +28,7 @@ export default function EmployersHero() {
               Post a Job
             </Button>
             <Button
-              href="mailto:hello@itechjobline.ca"
+              to="/contact#contact-form"
               variant="outline"
               icon={MessageCircle}
             >

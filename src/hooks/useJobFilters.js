@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 /**
  * Client-side job filtering. Swap the body of `filterJobs` for an API call later.
@@ -41,11 +41,16 @@ export function filterJobs(jobs, applied = {}) {
     if (workModelSelect) models.push(workModelSelect);
     if (models.length && !models.includes(job.workModel)) return false;
 
-    if (experience && job.experience !== experience) return false;
+    if (experience && job.experience) {
+      const normalize = (value) =>
+        String(value).toLowerCase().replace(/[\s_-]+/g, '');
+      if (normalize(job.experience) !== normalize(experience)) return false;
+    }
 
     if (salaryRange) {
       const [min, max] = salaryRange.split('-').map(Number);
-      if (job.salaryMax < min || job.salaryMin > max) return false;
+      const hasSalary = (job.salaryMin || 0) > 0 || (job.salaryMax || 0) > 0;
+      if (hasSalary && (job.salaryMax < min || job.salaryMin > max)) return false;
     }
 
     return true;
@@ -83,15 +88,36 @@ export default function useJobFilters(initial = {}) {
   const [draft, setDraft] = useState({ ...emptyDraft, ...initial });
   const [applied, setApplied] = useState({ ...emptyDraft, ...initial });
 
+  // Debounce effect for typing inputs (keyword, location)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setApplied((current) => ({
+        ...current,
+        keyword: draft.keyword,
+        location: draft.location,
+      }));
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [draft.keyword, draft.location]);
+
   const update = (field) => (event) => {
-    setDraft((current) => ({ ...current, [field]: event.target.value }));
+    const val = event.target.value;
+    setDraft((current) => ({ ...current, [field]: val }));
+
+    // Apply immediately if not a debounced typing field
+    if (field !== 'keyword' && field !== 'location') {
+      setApplied((current) => ({ ...current, [field]: val }));
+    }
   };
 
   const toggleList = (field, value) => {
     setDraft((current) => {
       const list = current[field] || [];
       const next = list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
-      return { ...current, [field]: next };
+      const updated = { ...current, [field]: next };
+      setApplied((currentApplied) => ({ ...currentApplied, [field]: next }));
+      return updated;
     });
   };
 
@@ -112,3 +138,4 @@ export default function useJobFilters(initial = {}) {
 
   return { draft, applied, update, toggleList, applyFilters, clearAll, patchApplied };
 }
+

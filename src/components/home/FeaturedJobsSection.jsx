@@ -1,10 +1,14 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { featuredJobs } from '../../data/featuredJobs.js';
+import useServiceCareJobs from '../../hooks/useServiceCareJobs.js';
 import SectionHeading from '../common/SectionHeading.jsx';
 import JobCard from './JobCard.jsx';
+import LoadingSpinner from '../common/LoadingSpinner.jsx';
 
 export default function FeaturedJobsSection() {
+  const { jobs, loading, error } = useServiceCareJobs({ limit: 8 });
+  const featured = jobs.slice(0, 4);
+
   return (
     <div>
       <SectionHeading
@@ -13,11 +17,37 @@ export default function FeaturedJobsSection() {
         align="left"
         className="mb-8"
       />
-      <div className="space-y-3">
-        {featuredJobs.map((job) => (
-          <JobCard key={job.id} {...job} />
-        ))}
-      </div>
+
+      {loading && (
+        <LoadingSpinner className="py-6" label="Loading jobs..." />
+      )}
+
+      {error && (
+        <p className="py-6 text-center text-sm text-red-400">{error}</p>
+      )}
+
+      {!loading && !error && featured.length === 0 && (
+        <p className="py-6 text-center text-sm text-brand-muted">
+          No active jobs are available right now.
+        </p>
+      )}
+
+      {!loading && !error && featured.length > 0 && (
+        <div className="space-y-3">
+          {featured.map((job) => (
+            <JobCard
+              key={job.id}
+              title={job.title}
+              company={job.company}
+              location={job.location}
+              type={job.jobType}
+              icon={job.icon}
+              to={job.to}
+            />
+          ))}
+        </div>
+      )}
+
       <div className="mt-6 text-center">
         <Link
           to="/jobs"
@@ -30,3 +60,4 @@ export default function FeaturedJobsSection() {
     </div>
   );
 }
+

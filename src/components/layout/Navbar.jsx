@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { Briefcase, User, Menu, X } from 'lucide-react';
+import { useAuth } from '../../lib/auth/AuthContext.jsx';
 import Button from '../common/Button.jsx';
 import Logo from './Logo.jsx';
 import NavItems from './NavItems.jsx';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { isAuthenticated, user, signOut } = useAuth();
+
+  const dashboardPath =
+    user?.role === 'employer' || user?.role === 'recruiter'
+      ? '/employer-dashboard/overview'
+      : '/dashboard/overview';
 
   return (
     <header className="sticky top-0 z-50 bg-brand-bg">
@@ -17,12 +24,25 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center justify-self-end gap-3 md:flex">
-          <Button to="/post-job" icon={Briefcase}>
-            Post a Job
-          </Button>
-          <Button to="/sign-in" variant="outline" icon={User}>
-            Sign In
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button to={dashboardPath} icon={User}>
+                Dashboard
+              </Button>
+              <Button onClick={signOut} variant="outline">
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button to="/post-job" icon={Briefcase}>
+                Post a Job
+              </Button>
+              <Button to="/sign-in" variant="outline" icon={User}>
+                Sign In
+              </Button>
+            </>
+          )}
         </div>
 
         <button
@@ -42,20 +62,40 @@ export default function Navbar() {
             <NavItems onNavigate={() => setOpen(false)} />
           </nav>
           <div className="mt-5 flex flex-col gap-3">
-            <Button to="/post-job" icon={Briefcase} onClick={() => setOpen(false)}>
-              Post a Job
-            </Button>
-            <Button
-              to="/sign-in"
-              variant="outline"
-              icon={User}
-              onClick={() => setOpen(false)}
-            >
-              Sign In
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Button to={dashboardPath} icon={User} onClick={() => setOpen(false)}>
+                  Dashboard
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    signOut();
+                    setOpen(false);
+                  }}
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button to="/post-job" icon={Briefcase} onClick={() => setOpen(false)}>
+                  Post a Job
+                </Button>
+                <Button
+                  to="/sign-in"
+                  variant="outline"
+                  icon={User}
+                  onClick={() => setOpen(false)}
+                >
+                  Sign In
+                </Button>
+              </>
+            )}
           </div>
         </div>
       ) : null}
     </header>
   );
 }
+

@@ -91,13 +91,58 @@ Completed modules
 4. Contact Us (/contact)
 5. Browse Jobs (/jobs)
 6. About Us (/about)
-7. Sign In (/sign-in) — client-side email, username, and password validation; Job Seeker / Employer roles; redirects home (no real auth yet)
+7. Sign In (/sign-in) — mock auth accepts any username/password; Job Seeker / Employer role toggle redirects to the appropriate dashboard
+8. Job Seeker Dashboard (/dashboard/*) — authenticated workspace with overview, find jobs, applications, saved jobs, profile, and settings
+9. Employer Dashboard (/employer-dashboard/*) — authenticated employer workspace with job postings, applicants, company profile, and settings
+
+## Job Seeker Dashboard
+
+The job seeker dashboard is a private route group at `/dashboard/*`, separate from the public marketing layout (no public navbar or footer). It is gated by `RequireAuth`: logged-out users are redirected to `/sign-in`, and employer/recruiter accounts are redirected to `/recruiter`.
+
+| Route | Page |
+|-------|------|
+| `/dashboard/overview` | Overview with stats, profile completeness, and recommended jobs |
+| `/dashboard/find-jobs` | Browse Jobs components reused with apply/save wired to dashboard state |
+| `/dashboard/applications` | Application tracking with status badges and withdraw |
+| `/dashboard/saved-jobs` | Bookmarked jobs with remove and apply actions |
+| `/dashboard/profile` | Simplified personal details form (no resume upload, no headline field; email shown prominently under full name) |
+| `/dashboard/settings` | Account and notification preferences only (no delete account action) |
+
+State is managed by `DashboardDataContext` (`src/context/DashboardDataContext.jsx`) with seeded mock data for applications, saved jobs, and profile. Actions (`applyToJob`, `toggleSaveJob`, `withdrawApplication`, `updateProfile`) are structured for a future API swap.
+
+## Employer Dashboard
+
+The employer dashboard is a private route group at `/employer-dashboard/*`, using the same `DashboardLayout` shell as the job seeker dashboard with employer-specific sidebar navigation. It is gated by `RequireAuth role="employer"`: logged-out users redirect to `/sign-in`, and job seeker accounts redirect to `/dashboard/overview`.
+
+| Route | Page |
+|-------|------|
+| `/employer-dashboard/overview` | Overview with hiring stats, recent applicants, and active postings |
+| `/employer-dashboard/job-postings` | List/manage all postings with filter, search, edit, close, and delete |
+| `/employer-dashboard/post-a-job` | Create or edit a posting via the shared `JobPostingForm` |
+| `/employer-dashboard/job-postings/:jobId/applicants` | Applicants for a single posting |
+| `/employer-dashboard/applicants` | All applicants across postings, filterable by posting, stage, and name |
+| `/employer-dashboard/company-profile` | Company info form persisted to context |
+| `/employer-dashboard/settings` | Account, notifications, sign out, and delete company account |
+
+State is managed by `EmployerDataContext` (`src/context/EmployerDataContext.jsx`) with seeded mock data for job postings, applicants, and company profile. All actions (`createJobPosting`, `advanceApplicantStage`, `updateCompanyProfile`, etc.) are structured for a future API swap.
+
+**Pipeline stage mapping** (for future backend integration):
+
+| Job Seeker (applicant-facing) | Employer (recruiter-facing) |
+|-------------------------------|----------------------------|
+| Applied | New |
+| In Review | Reviewed / Shortlisted |
+| Interview | Interview |
+| Offer | Offer |
+| Not Selected | Rejected |
+
+Defined in `src/data/pipelineStages.js`.
 
 Still to come
 
-1. Job details (/jobs/:jobId currently shows a placeholder)
-2. Real authentication and account creation
-3. Real API integration (job posts, pricing checkout, and contact submissions)
+1. Job details enhancements and full application flow
+2. Backend persistence for dashboard actions (applications, saved jobs, profile)
+3. Real API integration for remaining marketing forms
 
 Canonical logo and footer: Logo.jsx renders public/logo.png in the navbar, footer, and sign-in panel. Footer.jsx is a shared 4-column layout (brand, Quick Links, For Employers, Contact Info) plus a copyright / legal bar on every page.
 

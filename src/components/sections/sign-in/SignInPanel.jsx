@@ -1,6 +1,7 @@
 import { Star } from 'lucide-react';
 import { signInTestimonial } from '../../../data/signInContent.js';
 import Logo from '../../layout/Logo.jsx';
+import SectionEyebrow from '../../common/SectionEyebrow.jsx';
 import CodeBracketGraphic from '../../graphics/CodeBracketGraphic.jsx';
 
 export default function SignInPanel() {
@@ -8,7 +9,10 @@ export default function SignInPanel() {
     <div className="relative flex min-h-[420px] flex-col justify-between px-6 py-10 sm:px-10 lg:min-h-full lg:px-12 lg:py-12">
       <div className="max-w-lg">
         <Logo size="lg" />
-        <h1 className="mt-10 text-3xl font-extrabold leading-tight tracking-tight text-brand-white sm:text-4xl lg:text-[2.75rem]">
+        <div className="mt-8">
+          <SectionEyebrow label="Sign In" />
+        </div>
+        <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-brand-white sm:text-4xl lg:text-[2.75rem]">
           Welcome back to{' '}
           <span className="text-brand-accent">Canada&apos;s</span>{' '}
           <span className="bg-gradient-to-r from-brand-accent to-cyan-300 bg-clip-text text-transparent">

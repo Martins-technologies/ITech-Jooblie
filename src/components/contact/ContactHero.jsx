@@ -21,10 +21,10 @@ export default function ContactHero() {
 
       <div className="container-page relative">
         <div className="max-w-xl lg:max-w-[520px]">
-          <SectionEyebrow label="Contact Us" className="tracking-[0.14em]" />
+          <SectionEyebrow label="Contact Us" />
 
-          <h1 className="mt-3 max-w-2xl text-4xl font-extrabold leading-[1.12] tracking-tight text-white md:text-5xl lg:text-[52px]">
-            Contact <span className="text-brand-accent">iTech Jobline</span>
+          <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
+            Contact <span className="text-brand-accent">iTech</span> Jobline
           </h1>
 
           <p className="mt-4 max-w-xl text-base leading-relaxed text-white/80">

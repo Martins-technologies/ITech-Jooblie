@@ -1,8 +1,9 @@
-import { useEffect, useId, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { BadgeCheck, Briefcase, MapPin } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { BadgeCheck, Bookmark, Briefcase, CheckCircle, MapPin } from 'lucide-react';
 import Card from '../../common/Card.jsx';
 import Button from '../../common/Button.jsx';
+import ValidationAlert from '../../common/ValidationAlert.jsx';
 import CompanyLogoBadge from './CompanyLogoBadge.jsx';
 
 const pillClass = {
@@ -15,8 +16,27 @@ const pillClass = {
   Internship: 'border-brand-accent/60 text-brand-accent',
 };
 
-export default function JobCard({ job }) {
-  const [applyOpen, setApplyOpen] = useState(false);
+export default function JobCard({
+  job,
+  isApplied = false,
+  isSaved = false,
+  onApply,
+  onToggleSave,
+}) {
+  const navigate = useNavigate();
+  const [applyFeedback, setApplyFeedback] = useState(null);
+
+  const handleApply = async () => {
+    setApplyFeedback(null);
+    if (onApply) {
+      const result = await onApply(job);
+      if (result && result.success === false) {
+        setApplyFeedback(result);
+      }
+      return;
+    }
+    navigate(`/jobs/${job.id}`);
+  };
 
   return (
     <>
@@ -69,65 +89,48 @@ export default function JobCard({ job }) {
               </span>
             ) : null}
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {onToggleSave ? (
+              <button
+                type="button"
+                onClick={() => onToggleSave(job)}
+                className={`rounded-lg border p-2 transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
+                  isSaved
+                    ? 'border-brand-accent bg-brand-accent/10 text-brand-accent'
+                    : 'border-white/10 text-brand-muted hover:text-brand-white'
+                }`}
+                aria-label={isSaved ? 'Remove from saved jobs' : 'Save job'}
+                aria-pressed={isSaved}
+              >
+                <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+              </button>
+            ) : null}
             <Button to={`/jobs/${job.id}`} variant="outline" className="px-4 py-2">
               View Details
             </Button>
-            <Button variant="accent" className="px-4 py-2" onClick={() => setApplyOpen(true)}>
-              Apply Now
-            </Button>
+            {isApplied ? (
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-status-success/40 bg-status-success/10 px-4 py-2 text-sm font-semibold text-status-success">
+                <CheckCircle className="h-4 w-4" />
+                Applied
+              </span>
+            ) : (
+              <Button variant="accent" className="px-4 py-2" onClick={handleApply}>
+                Apply Now
+              </Button>
+            )}
           </div>
+          {applyFeedback ? (
+            <ValidationAlert
+              className="mt-2 w-full lg:max-w-md lg:ml-auto"
+              message={applyFeedback.error}
+              hints={applyFeedback.hints}
+              actionHref={applyFeedback.profileHref}
+              actionLabel={applyFeedback.profileHref ? 'Go to My Profile' : undefined}
+            />
+          ) : null}
         </div>
       </Card>
 
-      {applyOpen ? (
-        <ApplyModal job={job} onClose={() => setApplyOpen(false)} />
-      ) : null}
     </>
-  );
-}
-
-function ApplyModal({ job, onClose }) {
-  const titleId = useId();
-
-  useEffect(() => {
-    const onKey = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-      role="presentation"
-      onClick={onClose}
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        className="w-full max-w-md rounded-2xl border border-brand-border/50 bg-brand-card p-6 shadow-card"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <h2 id={titleId} className="text-xl font-bold text-brand-white">
-          Apply to {job.title}
-        </h2>
-        <p className="mt-2 text-sm text-brand-muted">
-          The full application flow is coming in a future module. This placeholder keeps the
-          Apply Now action wired so a real form can drop in later.
-        </p>
-        <p className="mt-3 text-sm text-brand-white">{job.company}</p>
-        <div className="mt-6 flex justify-end gap-2">
-          <Button variant="outline" onClick={onClose}>
-            Close
-          </Button>
-          <Button variant="accent" onClick={onClose}>
-            Got it
-          </Button>
-        </div>
-      </div>
-    </div>
   );
 }

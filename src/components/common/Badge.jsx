@@ -1,5 +1,5 @@
 /**
- * Pill badge used in the hero ("Canada's IT Job Destination") and similar callouts.
+ * Pill badge used for highlights and callouts.
  */
 export default function Badge({ icon: Icon, children, className = '' }) {
   return (

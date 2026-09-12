@@ -1,13 +1,16 @@
 import { Search, LayoutGrid, MapPin, ChevronDown } from 'lucide-react';
 import Button from '../../common/Button.jsx';
-import { jobCategories } from '../../../data/jobCategories.js';
+import { jobCategories as staticJobCategories } from '../../../data/jobCategories.js';
 
-const categoryOptions = [
+const defaultCategoryOptions = [
   { value: '', label: 'Any category' },
-  ...jobCategories.map((item) => ({ value: item.id, label: item.title })),
+  ...staticJobCategories.map((item) => ({ value: item.id, label: item.title })),
 ];
 
-export default function JobSearchBar({ draft, onChange, onSubmit }) {
+export default function JobSearchBar({ draft, onChange, onSubmit, categoryOptions = defaultCategoryOptions }) {
+  const categorySelectOptions = categoryOptions.length
+    ? categoryOptions
+    : defaultCategoryOptions;
   return (
     <form
       onSubmit={onSubmit}
@@ -38,7 +41,7 @@ export default function JobSearchBar({ draft, onChange, onSubmit }) {
             onChange={onChange('category')}
             className="w-full appearance-none bg-transparent pr-6 text-sm text-slate-800 outline-none focus-visible:ring-2 focus-visible:ring-brand-accent"
           >
-            {categoryOptions.map((option) => (
+            {categorySelectOptions.map((option) => (
               <option key={option.value || 'any'} value={option.value}>
                 {option.label}
               </option>

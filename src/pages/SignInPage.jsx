@@ -25,7 +25,11 @@ export default function SignInPage() {
       <div className="relative grid min-h-[calc(100vh-72px)] gap-0 lg:grid-cols-2">
         <SignInPanel />
         <div className="relative flex items-center justify-center px-6 py-10 sm:px-10 lg:justify-end lg:pr-12 lg:pl-8 xl:pr-16">
-          <SignInForm onSuccess={() => navigate('/')} />
+          <SignInForm
+            onSuccess={(role) =>
+              navigate(role === 'employer' ? '/employer-dashboard/overview' : '/dashboard/overview')
+            }
+          />
         </div>
       </div>
     </section>

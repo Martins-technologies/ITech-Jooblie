@@ -1,13 +1,12 @@
 import { images } from '../../../data/images.js';
 import { heroStats } from '../../../data/heroStats.js';
-import Badge from '../../common/Badge.jsx';
-import MapleLeafIcon from '../../common/MapleLeafIcon.jsx';
+import SectionEyebrow from '../../common/SectionEyebrow.jsx';
 import CanadaDotMap from '../../graphics/CanadaDotMap.jsx';
 import JobSearchBar from './JobSearchBar.jsx';
 import QuickSearches from './QuickSearches.jsx';
 import StatCard from './StatCard.jsx';
 
-export default function JobsHero({ search }) {
+export default function JobsHero({ search, categoryOptions }) {
   return (
     <section className="page-hero relative overflow-hidden bg-brand-bg pb-10">
       <CanadaDotMap className="pointer-events-none absolute inset-0 h-full w-full opacity-20" />
@@ -15,8 +14,8 @@ export default function JobsHero({ search }) {
       <div className="container-page relative">
         <div className="grid items-center gap-8 lg:grid-cols-2">
           <div>
-            <Badge icon={MapleLeafIcon}>Canada&apos;s IT Job Destination</Badge>
-            <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
+            <SectionEyebrow label="Browse Jobs" />
+            <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-brand-white md:text-5xl lg:text-[3.4rem]">
               Browse{' '}
               <span className="bg-gradient-to-r from-brand-accent to-cyan-300 bg-clip-text text-transparent">
                 IT Jobs
@@ -45,6 +44,7 @@ export default function JobsHero({ search }) {
             draft={search.draft}
             onChange={search.update}
             onSubmit={search.submitSearch}
+            categoryOptions={categoryOptions}
           />
           <QuickSearches onSelect={search.searchFromKeyword} />
         </div>

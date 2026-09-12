@@ -1,4 +1,5 @@
-import { ArrowRight, Headset } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowRight, ChevronLeft, ChevronRight, Headset } from 'lucide-react';
 import { employerTestimonials } from '../../../data/employerTestimonials.js';
 import Button from '../../common/Button.jsx';
 import Card from '../../common/Card.jsx';
@@ -6,21 +7,69 @@ import SectionHeading from '../../common/SectionHeading.jsx';
 import TestimonialCard from '../../common/TestimonialCard.jsx';
 
 export default function EmployerTestimonials() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeTestimonial = employerTestimonials[activeIndex];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveIndex((index) => (index + 1) % employerTestimonials.length);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const showPrevious = () => {
+    setActiveIndex((index) => (index - 1 + employerTestimonials.length) % employerTestimonials.length);
+  };
+
+  const showNext = () => {
+    setActiveIndex((index) => (index + 1) % employerTestimonials.length);
+  };
+
   return (
     <section className="section-alt py-12 md:py-16">
       <div className="container-page">
         <SectionHeading title="Trusted by Employers Across Canada" />
 
-        <div className="grid gap-5 md:grid-cols-2">
-          {employerTestimonials.map((item) => (
+        <div className="mx-auto max-w-2xl">
+          <div key={activeTestimonial.id} aria-live="polite">
             <TestimonialCard
-              key={item.id}
-              name={item.name}
-              role={item.role}
-              quote={item.quote}
-              initials={item.initials}
+              name={activeTestimonial.name}
+              role={activeTestimonial.role}
+              quote={activeTestimonial.quote}
+              initials={activeTestimonial.initials}
             />
-          ))}
+          </div>
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={showPrevious}
+              aria-label="Previous testimonial"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border/50 text-brand-accent transition-colors hover:border-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            {employerTestimonials.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveIndex(index)}
+                aria-label={`Show testimonial from ${item.name}`}
+                aria-current={index === activeIndex ? 'true' : undefined}
+                className={`h-2 w-2 rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-brand-accent ${
+                  index === activeIndex ? 'bg-brand-accent' : 'bg-brand-border'
+                }`}
+              />
+            ))}
+            <button
+              type="button"
+              onClick={showNext}
+              aria-label="Next testimonial"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border/50 text-brand-accent transition-colors hover:border-brand-accent focus-visible:ring-2 focus-visible:ring-brand-accent"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         <Card
