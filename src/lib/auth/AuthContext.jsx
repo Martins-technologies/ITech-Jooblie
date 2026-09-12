@@ -1,9 +1,37 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { api } from '../api.js';
-import { readSession, writeSession, clearSession } from './session.js';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { api, persistAuthSession } from '../api.js';
+import { apiRoleFromUi, uiRoleFromProfile } from '../mappers.js';
+import { refreshSupabaseSession } from '../storage.js';
+import { clearSession, readSession, writeSession } from './session.js';
 
 const AuthContext = createContext(null);
+
+function shapeUser(user, profile) {
+  const role = uiRoleFromProfile(profile?.role);
+  return {
+    id: user?.id || profile?.id,
+    email: user?.email || profile?.email,
+    full_name: profile?.full_name || user?.email || '',
+    username: user?.email || profile?.email || '',
+    role,
+    apiRole: profile?.role || null,
+    status: profile?.status || null,
+  };
+}
+
+function buildSession(authPayload, profile) {
+  const user = shapeUser(authPayload?.user, profile);
+  return {
+    accessToken: authPayload.session.access_token,
+    refreshToken: authPayload.session.refresh_token,
+    expiresAt: authPayload.session.expires_at,
+    tokenType: authPayload.session.token_type,
+    user,
+    profile: profile || null,
+    company: authPayload.company || null,
+  };
+}
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(() => readSession());
@@ -14,101 +42,91 @@ export function AuthProvider({ children }) {
     clearSession();
   }, []);
 
+  const applySession = useCallback((next) => {
+    setSession(next);
+    writeSession(next);
+    return next;
+  }, []);
+
   const refresh = useCallback(async () => {
-    if (!session?.refreshToken) return;
-    try {
-      const res = await api('/v1/auth/refresh', {
-        method: 'POST',
-        body: { refresh_token: session.refreshToken },
-      });
-      const nextSession = {
-        ...session,
-        accessToken: res.session.access_token,
-        refreshToken: res.session.refresh_token,
-        expiresAt: res.session.expires_at,
-        user: res.user || session.user,
-      };
-      setSession(nextSession);
-      writeSession(nextSession);
-      return nextSession;
-    } catch (err) {
-      console.error('Session refresh failed, logging out', err);
+    const current = readSession();
+    if (!current?.refreshToken) {
       signOut();
-      throw err;
+      throw new Error('Your session is invalid or expired.');
     }
-  }, [session, signOut]);
-
-  const signIn = useCallback(async (username, password, role = 'seeker') => {
-    const mockRole = role === 'employer' ? 'employer' : 'seeker';
-    const nextSession = {
-      accessToken: 'mock-access-token',
-      refreshToken: 'mock-refresh-token',
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      isMock: true,
-      user: {
-        id: 'mock-user',
-        username: username.trim() || 'user',
-        full_name: username.trim() || 'User',
-        role: mockRole,
-      },
-      profile: {
-        id: 'mock-user',
-        username: username.trim() || 'user',
-        full_name: username.trim() || 'User',
-        role: mockRole,
-      },
+    const tokens = await refreshSupabaseSession(current.refreshToken);
+    const accessToken = tokens.access_token;
+    const me = await api('auth/me', {}, accessToken);
+    const next = {
+      accessToken,
+      refreshToken: tokens.refresh_token || current.refreshToken,
+      expiresAt: tokens.expires_at,
+      tokenType: tokens.token_type || 'bearer',
+      user: shapeUser(me.user, me.profile),
+      profile: me.profile,
+      company: current.company || null,
     };
-    setSession(nextSession);
-    writeSession(nextSession);
-    return { user: nextSession.user, session: nextSession };
-  }, []);
+    return applySession(next);
+  }, [applySession, signOut]);
 
-  const signUp = useCallback(async (email, password, fullName, role) => {
-    const res = await api('/v1/auth/register', {
+  const signIn = useCallback(async (email, password) => {
+    const res = await api('auth/sign-in', {
       method: 'POST',
-      body: { email, password, full_name: fullName, role },
+      body: { email, password },
     });
-    if (res && res.session) {
-      const nextSession = {
-        accessToken: res.session.access_token,
-        refreshToken: res.session.refresh_token,
-        expiresAt: res.session.expires_at,
-        user: res.user,
-        profile: res.user,
-      };
-      setSession(nextSession);
-      writeSession(nextSession);
-    }
-    return res;
-  }, []);
+    const me = await api('auth/me', {}, res.session.access_token);
+    const next = buildSession(res, me.profile);
+    persistAuthSession(res, { profile: me.profile });
+    return applySession(next);
+  }, [applySession]);
 
-  // Fetch /v1/auth/me on mount or token changes
+  const signUp = useCallback(async (payload) => {
+    const body = {
+      email: payload.email,
+      password: payload.password,
+      name: payload.name,
+      role: apiRoleFromUi(payload.role),
+    };
+    if (body.role === 'recruiter') {
+      body.company_name = payload.company_name;
+      body.company_website = payload.company_website;
+      body.company_registration_number = payload.company_registration_number;
+    }
+    const res = await api('auth/sign-up', { method: 'POST', body });
+    if (res.confirmationRequired || !res.session) {
+      return { ...res, session: null };
+    }
+    const me = await api('auth/me', {}, res.session.access_token).catch(() => ({
+      profile: {
+        role: body.role,
+        full_name: payload.name,
+        email: payload.email,
+      },
+      user: res.user,
+    }));
+    const next = buildSession(res, me.profile);
+    persistAuthSession(res, { profile: me.profile });
+    return { ...res, session: applySession(next) };
+  }, [applySession]);
+
   useEffect(() => {
+    let active = true;
     async function initSession() {
-      if (!session?.accessToken) {
-        setLoading(false);
-        return;
-      }
-      if (session.isMock) {
-        setLoading(false);
+      const current = readSession();
+      if (!current?.accessToken) {
+        if (active) setLoading(false);
         return;
       }
       try {
-        const profile = await api('/v1/auth/me', {}, session.accessToken);
-        setSession((current) => {
-          if (!current) return null;
-          const next = {
-            ...current,
-            profile,
-            user: { ...current.user, ...profile },
-          };
-          writeSession(next);
-          return next;
+        const me = await api('auth/me', {}, current.accessToken);
+        if (!active) return;
+        applySession({
+          ...current,
+          profile: me.profile,
+          user: shapeUser(me.user, me.profile),
         });
       } catch (err) {
-        console.error('Auth verification failed', err);
-        // Try refreshing if token expired
-        if (session.refreshToken) {
+        if (current.refreshToken) {
           try {
             await refresh();
           } catch {
@@ -118,17 +136,18 @@ export function AuthProvider({ children }) {
           signOut();
         }
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }
-
     initSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => {
+      active = false;
+    };
+  }, [applySession, refresh, signOut]);
 
   const value = {
     session,
-    isAuthenticated: !!session?.accessToken,
+    isAuthenticated: Boolean(session?.accessToken),
     user: session?.user || null,
     profile: session?.profile || null,
     token: session?.accessToken || null,

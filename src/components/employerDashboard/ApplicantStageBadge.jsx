@@ -4,7 +4,9 @@ const stageStyles = {
   Shortlisted: 'border-accent-orange/50 bg-accent-orange/15 text-accent-orange',
   Interview: 'border-status-success/40 bg-status-success/15 text-status-success',
   Offer: 'border-status-success/50 bg-status-success/20 text-status-success',
+  Hired: 'border-status-success/50 bg-status-success/20 text-status-success',
   Rejected: 'border-white/20 bg-white/5 text-brand-muted',
+  Withdrawn: 'border-white/20 bg-white/5 text-brand-muted',
 };
 
 export default function ApplicantStageBadge({ stage }) {

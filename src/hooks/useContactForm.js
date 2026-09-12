@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { api } from '../lib/api.js';
 
 const initialValues = {
   name: '',
@@ -12,10 +11,13 @@ export default function useContactForm(onSubmit) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const update = (field) => (event) => {
     setValues((current) => ({ ...current, [field]: event.target.value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
+    setFormError('');
   };
 
   const validate = () => {
@@ -34,20 +36,14 @@ export default function useContactForm(onSubmit) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validate()) return;
-    console.log('Sending contact inquiry:', values);
-    try {
-      await api('/v1/contact', {
-        method: 'POST',
-        body: values,
-      });
-    } catch (err) {
-      console.error('Contact inquiry backend submission failed', err);
-    }
+    setLoading(true);
+    setFormError(
+      'The shared Jooblie API does not include a contact endpoint, so this message was not sent.',
+    );
+    setSubmitted(false);
     onSubmit?.(values);
-    setSubmitted(true);
-    setValues(initialValues);
+    setLoading(false);
   };
 
-  return { values, errors, submitted, update, handleSubmit };
+  return { values, errors, submitted, formError, loading, update, handleSubmit };
 }
-

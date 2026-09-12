@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import DashboardTopBanner from '../../components/dashboard/DashboardTopBanner.jsx';
 import ApplicantListItem from '../../components/employerDashboard/ApplicantListItem.jsx';
 import ApplicantProfileDrawer from '../../components/employerDashboard/ApplicantProfileDrawer.jsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import InlineNotice from '../../components/common/InlineNotice.jsx';
 import { useEmployerData } from '../../context/EmployerDataContext.jsx';
 
 export default function JobApplicantsPage() {
@@ -15,12 +17,25 @@ export default function JobApplicantsPage() {
     rejectApplicant,
     updateApplicantStage,
     updateApplicantNotes,
+    loadApplicantsForJob,
+    openApplicantResume,
+    loading,
+    error,
   } = useEmployerData();
   const [selectedApplicantId, setSelectedApplicantId] = useState(null);
+  const [pageError, setPageError] = useState('');
   const selectedApplicant = applicants.find((a) => a.id === selectedApplicantId) || null;
+
+  useEffect(() => {
+    loadApplicantsForJob(jobId).catch((err) => setPageError(err.message));
+  }, [jobId, loadApplicantsForJob]);
 
   const posting = getJobPosting(jobId);
   const jobApplicants = getApplicantsForJob(jobId);
+
+  if (loading && !posting) {
+    return <LoadingSpinner className="min-h-[40vh]" label="Loading applicants..." />;
+  }
 
   if (!posting) {
     return (
@@ -36,10 +51,13 @@ export default function JobApplicantsPage() {
   return (
     <>
       <DashboardTopBanner
-        eyebrow="Newcomer Jobline Dashboard"
+        eyebrow="IT Jobs Jobline Dashboard"
         title={`${posting.title} — Applicants`}
         subtitle={`${jobApplicants.length} candidate${jobApplicants.length !== 1 ? 's' : ''} applied for this role.`}
       />
+      <InlineNotice tone="error" className="mb-6">
+        {error || pageError}
+      </InlineNotice>
 
       <Link
         to="/employer-dashboard/job-postings"
@@ -75,6 +93,7 @@ export default function JobApplicantsPage() {
           onClose={() => setSelectedApplicantId(null)}
           onStageChange={updateApplicantStage}
           onNotesChange={updateApplicantNotes}
+          onViewResume={() => openApplicantResume(selectedApplicant.id)}
         />
       ) : null}
     </>

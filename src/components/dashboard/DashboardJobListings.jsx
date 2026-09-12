@@ -2,18 +2,36 @@ import { useEffect, useMemo, useState } from 'react';
 import { Filter, X } from 'lucide-react';
 import { sortJobs } from '../../hooks/useJobFilters.js';
 import { useDashboardData } from '../../context/DashboardDataContext.jsx';
+import useServiceCareCategories from '../../hooks/useServiceCareCategories.js';
 import JobFilterSidebar from '../sections/jobs/JobFilterSidebar.jsx';
 import JobResultsHeader from '../sections/jobs/JobResultsHeader.jsx';
 import JobCard from '../sections/jobs/JobCard.jsx';
 import Pagination from '../sections/jobs/Pagination.jsx';
 import JobSearchBar from '../sections/jobs/JobSearchBar.jsx';
+import LoadingSpinner from '../common/LoadingSpinner.jsx';
+import ValidationAlert from '../common/ValidationAlert.jsx';
+import { validateJobApplicationReadiness } from '../../lib/formValidation.js';
 
 export default function DashboardJobListings({ jobs, filters, search, loading, error }) {
-  const { isJobApplied, isJobSaved, applyToJob, toggleSaveJob } = useDashboardData();
+  const { isJobApplied, isJobSaved, applyToJob, toggleSaveJob, error: actionError, notice, profile, resumes } =
+    useDashboardData();
+  const { categories } = useServiceCareCategories();
+  const searchCategoryOptions = useMemo(
+    () => [
+      { value: '', label: 'Any category' },
+      ...categories.map((item) => ({ value: item.slug, label: item.name })),
+    ],
+    [categories],
+  );
   const [sortBy, setSortBy] = useState('recent');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(12);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const applyReadiness = useMemo(
+    () => validateJobApplicationReadiness({ profile, resumes }),
+    [profile, resumes],
+  );
 
   const sorted = useMemo(() => sortJobs(jobs, sortBy), [jobs, sortBy]);
   const displayTotal = sorted.length;
@@ -39,8 +57,28 @@ export default function DashboardJobListings({ jobs, filters, search, loading, e
           draft={search.draft}
           onChange={search.update}
           onSubmit={search.submitSearch}
+          categoryOptions={searchCategoryOptions}
         />
       </div>
+      {applyReadiness.ok ? null : (
+        <ValidationAlert
+          className="mb-4"
+          title="Resume required to apply"
+          message={applyReadiness.message}
+          hints={applyReadiness.hints}
+          actionHref={applyReadiness.profileHref}
+          actionLabel="Upload resume on My Profile"
+        />
+      )}
+      {actionError ? (
+        <ValidationAlert
+          className="mb-4"
+          message={actionError}
+          actionHref={/resume/i.test(actionError) ? '/dashboard/profile' : undefined}
+          actionLabel={/resume/i.test(actionError) ? 'Go to My Profile' : undefined}
+        />
+      ) : null}
+      {notice ? <p className="mb-4 rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3 text-sm text-emerald-400">{notice}</p> : null}
 
       <div className="mb-4 lg:hidden">
         <button
@@ -68,9 +106,9 @@ export default function DashboardJobListings({ jobs, filters, search, loading, e
           />
 
           {loading ? (
-            <p className="rounded-xl border border-brand-border/40 bg-brand-card p-8 text-center text-brand-muted">
-              Loading jobs...
-            </p>
+            <div className="rounded-xl border border-brand-border/40 bg-brand-card p-8">
+              <LoadingSpinner label="Loading jobs..." />
+            </div>
           ) : error ? (
             <p className="rounded-xl border border-red-400/40 bg-brand-card p-8 text-center text-red-400">
               {error}

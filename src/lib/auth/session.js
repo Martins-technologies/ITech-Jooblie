@@ -1,4 +1,4 @@
-const SESSION_KEY = 'servicecare.session';
+const SESSION_KEY = 'itjobs.session';
 
 export function readSession() {
   try {
@@ -19,7 +19,7 @@ export function writeSession(session) {
       localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     }
   } catch (err) {
-    console.error('Failed to write auth session to storage', err);
+    console.error('Failed to write auth session from storage', err);
   }
 }
 

@@ -1,20 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DashboardTopBanner from '../../components/dashboard/DashboardTopBanner.jsx';
 import ProfileCompletenessBar from '../../components/dashboard/ProfileCompletenessBar.jsx';
 import Card from '../../components/common/Card.jsx';
 import Input from '../../components/common/Input.jsx';
 import Button from '../../components/common/Button.jsx';
+import InlineNotice from '../../components/common/InlineNotice.jsx';
 import { User, Mail, Phone, MapPin } from 'lucide-react';
 import { useDashboardData } from '../../context/DashboardDataContext.jsx';
+import { useAuth } from '../../lib/auth/AuthContext.jsx';
+import { registerResume, updateAuthProfile } from '../../lib/jobs.js';
+import { uploadResumeToStorage } from '../../lib/storage.js';
+import { formatApiError, validateResumeFile, validateSeekerProfileForm } from '../../lib/formValidation.js';
 
 export default function MyProfilePage() {
-  const { profile, profileCompleteness, updateProfile } = useDashboardData();
+  const { profile, profileCompleteness, updateProfile, resumes, refreshDashboard, error, notice } =
+    useDashboardData();
+  const { token, user } = useAuth();
   const [form, setForm] = useState({ ...profile });
   const [skillInput, setSkillInput] = useState('');
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [resumeError, setResumeError] = useState('');
+  const [resumeNotice, setResumeNotice] = useState('');
+  const [uploadingResume, setUploadingResume] = useState(false);
+
+  useEffect(() => {
+    setForm({ ...profile });
+  }, [profile]);
 
   const updateField = (field) => (event) => {
     setForm((current) => ({ ...current, [field]: event.target.value }));
+    setFieldErrors((current) => ({ ...current, [field]: undefined }));
     setSaved(false);
   };
 
@@ -94,16 +112,67 @@ export default function MyProfilePage() {
     setSaved(false);
   };
 
-  const handleSave = (event) => {
+  const handleSave = async (event) => {
     event.preventDefault();
-    updateProfile(form);
-    setSaved(true);
+    setSaving(true);
+    setFormError('');
+    setFieldErrors({});
+    setSaved(false);
+    const nextErrors = validateSeekerProfileForm(form);
+    if (Object.keys(nextErrors).length) {
+      setFieldErrors(nextErrors);
+      setFormError('Fix the highlighted fields before saving.');
+      setSaving(false);
+      return;
+    }
+    try {
+      await updateProfile(form);
+      setSaved(true);
+    } catch (err) {
+      setFormError(formatApiError(err, 'Unable to save profile.'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleResumeUpload = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    const fileError = validateResumeFile(file);
+    if (fileError) {
+      setResumeError(fileError);
+      return;
+    }
+    setResumeError('');
+    setResumeNotice('');
+    setUploadingResume(true);
+    try {
+      const uploaded = await uploadResumeToStorage({
+        accessToken: token,
+        userId: user.id,
+        file,
+      });
+      const registered = await registerResume(token, {
+        path: uploaded.path,
+        original_name: uploaded.originalName,
+        size_bytes: uploaded.sizeBytes,
+        content_type: 'application/pdf',
+      });
+      await updateAuthProfile(token, { default_resume_path: registered.resume.storage_path });
+      await refreshDashboard();
+      setResumeNotice('Resume uploaded and set as your default.');
+    } catch (err) {
+      setResumeError(formatApiError(err, 'Resume upload failed.'));
+    } finally {
+      setUploadingResume(false);
+    }
   };
 
   return (
     <>
       <DashboardTopBanner
-        eyebrow="Newcomer Jobline Dashboard"
+        eyebrow="IT Jobs Jobline Dashboard"
         title="My Profile"
         subtitle="Tell us a bit about yourself so employers can get to know you."
       />
@@ -124,6 +193,7 @@ export default function MyProfilePage() {
             placeholder="Enter your full name"
             value={form.fullName}
             onChange={updateField('fullName')}
+            error={fieldErrors.fullName}
           />
           <Input
             id="profile-email"
@@ -134,6 +204,7 @@ export default function MyProfilePage() {
             placeholder="Enter your email address"
             value={form.email}
             onChange={updateField('email')}
+            disabled
           />
           <Input
             id="profile-phone"
@@ -144,6 +215,7 @@ export default function MyProfilePage() {
             placeholder="Enter your phone number"
             value={form.phone}
             onChange={updateField('phone')}
+            error={fieldErrors.phone}
           />
           <Input
             id="profile-location"
@@ -153,6 +225,7 @@ export default function MyProfilePage() {
             placeholder="e.g., Toronto, ON"
             value={form.location}
             onChange={updateField('location')}
+            error={fieldErrors.location}
           />
 
           <div>
@@ -272,12 +345,41 @@ export default function MyProfilePage() {
             </Button>
           </fieldset>
 
-          {saved ? (
-            <p className="text-sm font-medium text-status-success">Your changes have been saved.</p>
+          <fieldset id="profile-resume" className="space-y-3 rounded-xl border border-white/10 p-4">
+            <legend className="px-1 text-sm font-semibold text-brand-white">Resume (PDF)</legend>
+            <p className="text-xs text-brand-muted">
+              Applications require a registered PDF resume. Upload to your account, then apply from a job page.
+            </p>
+            {resumes?.length ? (
+              <ul className="space-y-1 text-sm text-brand-white">
+                {resumes.map((item) => (
+                  <li key={item.id}>
+                    {item.original_name} {item.storage_path === profile.defaultResumePath ? '(default)' : ''}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-brand-muted">No resume uploaded yet.</p>
+            )}
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handleResumeUpload}
+              disabled={uploadingResume}
+              className="w-full rounded-lg border border-white/10 bg-brand-bg px-3 py-2 text-sm text-brand-muted file:mr-4 file:rounded-md file:border-0 file:bg-brand-accent/20 file:px-3 file:py-1 file:text-sm file:font-semibold file:text-brand-accent"
+            />
+            {uploadingResume ? <p className="text-sm text-brand-muted">Uploading resume...</p> : null}
+            <InlineNotice tone="error">{resumeError}</InlineNotice>
+            <InlineNotice tone="success">{resumeNotice}</InlineNotice>
+          </fieldset>
+
+          <InlineNotice tone="error">{formError || error}</InlineNotice>
+          {saved || notice ? (
+            <p className="text-sm font-medium text-status-success">{notice || 'Your changes have been saved.'}</p>
           ) : null}
 
-          <Button type="submit" variant="gradient" className="w-full sm:w-auto">
-            Save Changes
+          <Button type="submit" variant="gradient" className="w-full sm:w-auto" disabled={saving}>
+            {saving ? 'Saving...' : 'Save Changes'}
           </Button>
         </form>
       </Card>

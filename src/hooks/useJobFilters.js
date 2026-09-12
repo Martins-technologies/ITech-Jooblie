@@ -41,11 +41,16 @@ export function filterJobs(jobs, applied = {}) {
     if (workModelSelect) models.push(workModelSelect);
     if (models.length && !models.includes(job.workModel)) return false;
 
-    if (experience && job.experience !== experience) return false;
+    if (experience && job.experience) {
+      const normalize = (value) =>
+        String(value).toLowerCase().replace(/[\s_-]+/g, '');
+      if (normalize(job.experience) !== normalize(experience)) return false;
+    }
 
     if (salaryRange) {
       const [min, max] = salaryRange.split('-').map(Number);
-      if (job.salaryMax < min || job.salaryMin > max) return false;
+      const hasSalary = (job.salaryMin || 0) > 0 || (job.salaryMax || 0) > 0;
+      if (hasSalary && (job.salaryMax < min || job.salaryMin > max)) return false;
     }
 
     return true;

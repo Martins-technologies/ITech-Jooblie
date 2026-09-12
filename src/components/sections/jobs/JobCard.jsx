@@ -1,8 +1,9 @@
-import { useEffect, useId, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { BadgeCheck, Bookmark, Briefcase, CheckCircle, MapPin } from 'lucide-react';
 import Card from '../../common/Card.jsx';
 import Button from '../../common/Button.jsx';
+import ValidationAlert from '../../common/ValidationAlert.jsx';
 import CompanyLogoBadge from './CompanyLogoBadge.jsx';
 
 const pillClass = {
@@ -22,15 +23,19 @@ export default function JobCard({
   onApply,
   onToggleSave,
 }) {
-  const [applyOpen, setApplyOpen] = useState(false);
-  const dashboardMode = Boolean(onApply || onToggleSave);
+  const navigate = useNavigate();
+  const [applyFeedback, setApplyFeedback] = useState(null);
 
-  const handleApply = () => {
+  const handleApply = async () => {
+    setApplyFeedback(null);
     if (onApply) {
-      onApply(job);
+      const result = await onApply(job);
+      if (result && result.success === false) {
+        setApplyFeedback(result);
+      }
       return;
     }
-    setApplyOpen(true);
+    navigate(`/jobs/${job.id}`);
   };
 
   return (
@@ -114,57 +119,18 @@ export default function JobCard({
               </Button>
             )}
           </div>
+          {applyFeedback ? (
+            <ValidationAlert
+              className="mt-2 w-full lg:max-w-md lg:ml-auto"
+              message={applyFeedback.error}
+              hints={applyFeedback.hints}
+              actionHref={applyFeedback.profileHref}
+              actionLabel={applyFeedback.profileHref ? 'Go to My Profile' : undefined}
+            />
+          ) : null}
         </div>
       </Card>
 
-      {!dashboardMode && applyOpen ? (
-        <ApplyModal job={job} onClose={() => setApplyOpen(false)} />
-      ) : null}
     </>
-  );
-}
-
-function ApplyModal({ job, onClose }) {
-  const titleId = useId();
-
-  useEffect(() => {
-    const onKey = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-      role="presentation"
-      onClick={onClose}
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        className="w-full max-w-md rounded-2xl border border-brand-border/50 bg-brand-card p-6 shadow-card"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <h2 id={titleId} className="text-xl font-bold text-brand-white">
-          Apply to {job.title}
-        </h2>
-        <p className="mt-2 text-sm text-brand-muted">
-          The full application flow is coming in a future module. This placeholder keeps the
-          Apply Now action wired so a real form can drop in later.
-        </p>
-        <p className="mt-3 text-sm text-brand-white">{job.company}</p>
-        <div className="mt-6 flex justify-end gap-2">
-          <Button variant="outline" onClick={onClose}>
-            Close
-          </Button>
-          <Button variant="accent" onClick={onClose}>
-            Got it
-          </Button>
-        </div>
-      </div>
-    </div>
   );
 }

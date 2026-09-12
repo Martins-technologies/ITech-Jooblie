@@ -22,6 +22,7 @@ export default function AllApplicantsPage() {
     rejectApplicant,
     updateApplicantStage,
     updateApplicantNotes,
+    openApplicantResume,
   } = useEmployerData();
   const [selectedApplicantId, setSelectedApplicantId] = useState(null);
   const selectedApplicant = applicants.find((a) => a.id === selectedApplicantId) || null;
@@ -50,7 +51,7 @@ export default function AllApplicantsPage() {
   return (
     <>
       <DashboardTopBanner
-        eyebrow="Newcomer Jobline Dashboard"
+        eyebrow="IT Jobs Jobline Dashboard"
         title="All Applicants"
         subtitle="Review and manage candidates across all your job postings."
       />
@@ -115,6 +116,7 @@ export default function AllApplicantsPage() {
           onClose={() => setSelectedApplicantId(null)}
           onStageChange={updateApplicantStage}
           onNotesChange={updateApplicantNotes}
+          onViewResume={() => openApplicantResume(selectedApplicant.id)}
         />
       ) : null}
     </>

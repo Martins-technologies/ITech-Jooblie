@@ -4,13 +4,16 @@ import DashboardTopBanner from '../../components/dashboard/DashboardTopBanner.js
 import JobPostingCard from '../../components/employerDashboard/JobPostingCard.jsx';
 import JobPostingsFilterBar from '../../components/employerDashboard/JobPostingsFilterBar.jsx';
 import Button from '../../components/common/Button.jsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import InlineNotice from '../../components/common/InlineNotice.jsx';
 import { useEmployerData } from '../../context/EmployerDataContext.jsx';
 
 export default function JobPostingsPage() {
   const location = useLocation();
-  const { jobPostings, closeJobPosting, deleteJobPosting } = useEmployerData();
+  const { jobPostings, closeJobPosting, deleteJobPosting, loading, error } = useEmployerData();
   const [status, setStatus] = useState('All');
   const [search, setSearch] = useState('');
+  const [actionError, setActionError] = useState('');
   const successMessage = location.state?.message;
 
   const filtered = useMemo(() => {
@@ -27,7 +30,7 @@ export default function JobPostingsPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex-1">
           <DashboardTopBanner
-            eyebrow="Newcomer Jobline Dashboard"
+            eyebrow="IT Jobs Jobline Dashboard"
             title="Job Postings"
             subtitle="Manage all your job postings in one place."
           />
@@ -42,6 +45,11 @@ export default function JobPostingsPage() {
           {successMessage}
         </p>
       ) : null}
+      <InlineNotice tone="error" className="mb-6">
+        {error || actionError}
+      </InlineNotice>
+
+      {loading ? <LoadingSpinner className="mb-6" label="Loading postings..." /> : null}
 
       <div className="mb-6">
         <JobPostingsFilterBar
@@ -59,7 +67,14 @@ export default function JobPostingsPage() {
               key={posting.id}
               posting={posting}
               onClose={closeJobPosting}
-              onDelete={deleteJobPosting}
+              onDelete={async (id) => {
+                setActionError('');
+                try {
+                  await deleteJobPosting(id);
+                } catch (err) {
+                  setActionError(err.message);
+                }
+              }}
             />
           ))}
         </div>

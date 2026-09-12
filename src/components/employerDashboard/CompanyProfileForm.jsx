@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { formatApiError, validateCompanyProfileForm } from '../../lib/formValidation.js';
 import { Building2, Globe, MapPin } from 'lucide-react';
 import { jobCategories } from '../../data/jobCategories.js';
 import Button from '../common/Button.jsx';
@@ -20,11 +21,19 @@ const sizeOptions = [
 ];
 
 export default function CompanyProfileForm({ profile, onSave }) {
-  const [form, setForm] = useState({ ...profile });
+  const [form, setForm] = useState({ registrationNumber: '', ...profile });
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  useEffect(() => {
+    setForm({ registrationNumber: '', ...profile });
+  }, [profile]);
 
   const updateField = (field) => (event) => {
     setForm((current) => ({ ...current, [field]: event.target.value }));
+    setFieldErrors((current) => ({ ...current, [field]: undefined }));
     setSaved(false);
   };
 
@@ -36,10 +45,26 @@ export default function CompanyProfileForm({ profile, onSave }) {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSave?.(form);
-    setSaved(true);
+    setSaving(true);
+    setFormError('');
+    setFieldErrors({});
+    setSaved(false);
+    const nextErrors = validateCompanyProfileForm(form);
+    if (Object.keys(nextErrors).length) {
+      setFieldErrors(nextErrors);
+      setSaving(false);
+      return;
+    }
+    try {
+      await onSave?.(form);
+      setSaved(true);
+    } catch (err) {
+      setFormError(formatApiError(err, 'Unable to save company profile.'));
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -52,6 +77,16 @@ export default function CompanyProfileForm({ profile, onSave }) {
         icon={Building2}
         value={form.name}
         onChange={updateField('name')}
+        error={fieldErrors.name}
+      />
+      <Input
+        id="company-registration"
+        name="registrationNumber"
+        label="Registration number"
+        required
+        value={form.registrationNumber || ''}
+        onChange={updateField('registrationNumber')}
+        error={fieldErrors.registrationNumber}
       />
       <div>
         <label htmlFor="company-logo" className="mb-1.5 block text-sm font-medium text-brand-white">
@@ -92,6 +127,7 @@ export default function CompanyProfileForm({ profile, onSave }) {
         placeholder="https://yourcompany.com"
         value={form.website}
         onChange={updateField('website')}
+        error={fieldErrors.website}
       />
       <Input
         id="company-location"
@@ -118,11 +154,12 @@ export default function CompanyProfileForm({ profile, onSave }) {
           className="w-full rounded-lg border border-white/10 bg-brand-card/50 px-4 py-2.5 text-sm text-brand-white placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent"
         />
       </div>
+      {formError ? <p className="text-sm text-red-400">{formError}</p> : null}
       {saved ? (
         <p className="text-sm text-status-success">Company profile saved successfully.</p>
       ) : null}
-      <Button type="submit" variant="accent">
-        Save Changes
+      <Button type="submit" variant="accent" disabled={saving}>
+        {saving ? 'Saving...' : 'Save Changes'}
       </Button>
     </form>
   );

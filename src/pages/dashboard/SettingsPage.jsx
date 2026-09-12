@@ -14,6 +14,7 @@ export default function SettingsPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [accountSaved, setAccountSaved] = useState(false);
+  const [accountError, setAccountError] = useState('');
   const [notifications, setNotifications] = useState({
     jobMatches: true,
     statusUpdates: true,
@@ -21,9 +22,10 @@ export default function SettingsPage() {
 
   const handleAccountSave = (event) => {
     event.preventDefault();
-    if (!email.trim() && !password) return;
-    setAccountSaved(true);
-    setPassword('');
+    setAccountSaved(false);
+    setAccountError(
+      'Email and password changes are not available on the shared API. Sign out locally if you need to switch accounts.',
+    );
   };
 
   const handleSignOut = () => {
@@ -34,7 +36,7 @@ export default function SettingsPage() {
   return (
     <>
       <DashboardTopBanner
-        eyebrow="Newcomer Jobline Dashboard"
+        eyebrow="IT Jobs Jobline Dashboard"
         title="Settings"
         subtitle="Manage your account and notification preferences."
       />
@@ -70,6 +72,9 @@ export default function SettingsPage() {
                 setAccountSaved(false);
               }}
             />
+            {accountError ? (
+              <p className="text-sm text-red-400">{accountError}</p>
+            ) : null}
             {accountSaved ? (
               <p className="text-sm text-status-success">Account settings updated.</p>
             ) : null}

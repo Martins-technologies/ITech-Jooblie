@@ -72,7 +72,7 @@ export default function ApplicantListItem({
               >
                 View Profile
               </Button>
-              {applicant.stage !== 'Rejected' && applicant.stage !== 'Offer' ? (
+              {applicant.stage !== 'Rejected' && applicant.stage !== 'Hired' ? (
                 <Button
                   variant="outline"
                   className="px-3 py-2 text-xs"

@@ -5,7 +5,7 @@ import Select from '../common/Select.jsx';
 const statusOptions = [
   { value: 'All', label: 'All Statuses' },
   { value: 'Active', label: 'Active' },
-  { value: 'Draft', label: 'Draft' },
+  { value: 'Pending Review', label: 'Pending Review' },
   { value: 'Closed', label: 'Closed' },
 ];
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Briefcase, Eye, UserCheck, AlertCircle, Plus, ChevronDown, ChevronUp } from 'lucide-react';
-import { getEmployerJobs, getJobApplications, getJobViews } from '../../lib/jobs.js';
+import { getRecruiterDashboard, getJobApplications } from '../../lib/jobs.js';
 import { useAuth } from '../../lib/auth/AuthContext.jsx';
 import Card from '../../components/common/Card.jsx';
 import Button from '../../components/common/Button.jsx';
@@ -22,55 +22,48 @@ export default function RecruiterHome() {
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       navigate('/sign-in');
+    } else if (!authLoading && isAuthenticated && user?.role !== 'employer') {
+      navigate('/dashboard/overview');
     }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isAuthenticated, authLoading, navigate, user?.role]);
 
-  // Fetch jobs, applications and views
   useEffect(() => {
     async function loadRecruiterData() {
-      if (!isAuthenticated || !token) return;
+      if (!isAuthenticated || !token || user?.role !== 'employer') return;
       try {
         setLoading(true);
-        const employerJobs = await getEmployerJobs(token);
-        setJobs(employerJobs || []);
+        const dashboard = await getRecruiterDashboard(token);
+        const employerJobs = dashboard.jobs || [];
+        setJobs(employerJobs);
 
-        // Nested parallel queries for each job's views and applications
-        const detailPromises = (employerJobs || []).map(async (job) => {
-          const [apps, views] = await Promise.all([
-            getJobApplications(job.id, token).catch(() => []),
-            getJobViews(job.id, token).catch(() => []),
-          ]);
+        const detailPromises = employerJobs.map(async (job) => {
+          const apps = await getJobApplications(job.id, token).catch(() => []);
           return {
             jobId: job.id,
-            applicationsCount: apps.length,
+            applicationsCount: job.applications_count ?? apps.length,
             applicationsList: apps,
-            viewsCount: views.length,
-            viewsList: views,
+            viewsCount: job.views_count ?? 0,
           };
         });
 
         const details = await Promise.all(detailPromises);
-
-        let totalApps = 0;
-        let totalViews = 0;
+        let totalApps = dashboard.metrics?.applications || 0;
+        let totalViews = dashboard.metrics?.views || 0;
         const byJob = {};
-
         details.forEach((item) => {
-          totalApps += item.applicationsCount;
-          totalViews += item.viewsCount;
           byJob[item.jobId] = {
             applications: item.applicationsCount,
             applicationsList: item.applicationsList,
             views: item.viewsCount,
-            viewsList: item.viewsList,
           };
         });
-
-        setStats({
-          applications: totalApps,
-          views: totalViews,
-          byJob,
-        });
+        if (!totalApps) {
+          totalApps = details.reduce((sum, item) => sum + item.applicationsCount, 0);
+        }
+        if (!totalViews) {
+          totalViews = details.reduce((sum, item) => sum + item.viewsCount, 0);
+        }
+        setStats({ applications: totalApps, views: totalViews, byJob });
         setError(null);
       } catch (err) {
         setError(err.message || 'Failed to load recruiter data.');
@@ -79,7 +72,7 @@ export default function RecruiterHome() {
       }
     }
     loadRecruiterData();
-  }, [token, isAuthenticated]);
+  }, [token, isAuthenticated, user?.role]);
 
   const toggleExpand = (jobId) => {
     setExpandedJobId(expandedJobId === jobId ? null : jobId);

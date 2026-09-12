@@ -6,6 +6,8 @@ import ApplicantListItem from '../../components/employerDashboard/ApplicantListI
 import ApplicantProfileDrawer from '../../components/employerDashboard/ApplicantProfileDrawer.jsx';
 import JobPostingCard from '../../components/employerDashboard/JobPostingCard.jsx';
 import Button from '../../components/common/Button.jsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import InlineNotice from '../../components/common/InlineNotice.jsx';
 import { useEmployerData } from '../../context/EmployerDataContext.jsx';
 
 export default function EmployerOverviewPage() {
@@ -18,6 +20,9 @@ export default function EmployerOverviewPage() {
     updateApplicantStage,
     updateApplicantNotes,
     getJobPosting,
+    loading,
+    error,
+    openApplicantResume,
   } = useEmployerData();
   const [selectedApplicantId, setSelectedApplicantId] = useState(null);
   const selectedApplicant = applicants.find((a) => a.id === selectedApplicantId) || null;
@@ -41,13 +46,20 @@ export default function EmployerOverviewPage() {
 
   const hasPostings = jobPostings.length > 0;
 
+  if (loading) {
+    return <LoadingSpinner className="min-h-[40vh]" label="Loading employer dashboard..." />;
+  }
+
   return (
     <>
       <DashboardTopBanner
-        eyebrow="Newcomer Jobline Dashboard"
+        eyebrow="IT Jobs Jobline Dashboard"
         title="Overview"
         subtitle="Your hiring activity at a glance."
       />
+      <InlineNotice tone="error" className="mb-6">
+        {error}
+      </InlineNotice>
 
       {hasPostings ? (
         <>
@@ -121,6 +133,7 @@ export default function EmployerOverviewPage() {
           onClose={() => setSelectedApplicantId(null)}
           onStageChange={updateApplicantStage}
           onNotesChange={updateApplicantNotes}
+          onViewResume={() => openApplicantResume(selectedApplicant.id)}
         />
       ) : null}
     </>

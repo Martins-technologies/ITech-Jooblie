@@ -3,14 +3,17 @@ import DashboardTopBanner from '../../components/dashboard/DashboardTopBanner.js
 import ApplicationListItem from '../../components/dashboard/ApplicationListItem.jsx';
 import Button from '../../components/common/Button.jsx';
 import Card from '../../components/common/Card.jsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import InlineNotice from '../../components/common/InlineNotice.jsx';
 import { useDashboardData } from '../../context/DashboardDataContext.jsx';
 
-const statusOptions = ['All', 'Applied', 'In Review', 'Interview', 'Offer', 'Not Selected'];
+const statusOptions = ['All', 'Applied', 'In Review', 'Interview', 'Offer', 'Not Selected', 'Withdrawn'];
 
 export default function MyApplicationsPage() {
-  const { applications, withdrawApplication } = useDashboardData();
+  const { applications, withdrawApplication, loading, error } = useDashboardData();
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortBy, setSortBy] = useState('newest');
+  const [actionError, setActionError] = useState('');
 
   const filtered = useMemo(() => {
     let list = [...applications];
@@ -25,13 +28,29 @@ export default function MyApplicationsPage() {
     return list;
   }, [applications, statusFilter, sortBy]);
 
+  const handleWithdraw = async (id) => {
+    setActionError('');
+    try {
+      await withdrawApplication(id);
+    } catch (err) {
+      setActionError(err.message);
+    }
+  };
+
+  if (loading) {
+    return <LoadingSpinner className="min-h-[40vh]" label="Loading applications..." />;
+  }
+
   return (
     <>
       <DashboardTopBanner
-        eyebrow="Newcomer Jobline Dashboard"
+        eyebrow="IT Jobs Jobline Dashboard"
         title="My Applications"
         subtitle="Track the status of every job you've applied to."
       />
+      <InlineNotice tone="error" className="mb-6">
+        {error || actionError}
+      </InlineNotice>
 
       {applications.length > 0 ? (
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -69,7 +88,7 @@ export default function MyApplicationsPage() {
             <ApplicationListItem
               key={application.id}
               application={application}
-              onWithdraw={withdrawApplication}
+              onWithdraw={handleWithdraw}
             />
           ))}
         </div>

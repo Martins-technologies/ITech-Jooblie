@@ -1,75 +1,65 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { api } from './api.js';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useAuth } from './auth/AuthContext.jsx';
+import { getSeekerDashboard, saveJob, unsaveJob } from './jobs.js';
 
 const SavedJobsContext = createContext(null);
 
 export function SavedJobsProvider({ children }) {
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, user } = useAuth();
   const [savedIds, setSavedIds] = useState(new Set());
   const [loading, setLoading] = useState(false);
 
-  // Load saved jobs on mount / authentication status change
-  useEffect(() => {
-    async function loadSavedJobs() {
-      if (!isAuthenticated || !token) {
-        setSavedIds(new Set());
-        return;
-      }
-      setLoading(true);
-      try {
-        const data = await api('/v1/me/saved-jobs', {}, token);
-        // data shape: [{ job_id }]
-        const ids = new Set(data.map((item) => String(item.job_id)));
-        setSavedIds(ids);
-      } catch (err) {
-        console.error('Failed to load saved jobs', err);
-      } finally {
-        setLoading(false);
-      }
+  const loadSavedJobs = useCallback(async () => {
+    if (!isAuthenticated || !token || user?.role === 'employer') {
+      setSavedIds(new Set());
+      return;
     }
+    setLoading(true);
+    try {
+      const data = await getSeekerDashboard(token);
+      const ids = new Set((data.savedJobIds || []).map((id) => String(id)));
+      (data.savedJobs || []).forEach((item) => {
+        if (item.job_id) ids.add(String(item.job_id));
+      });
+      setSavedIds(ids);
+    } catch {
+      setSavedIds(new Set());
+    } finally {
+      setLoading(false);
+    }
+  }, [isAuthenticated, token, user?.role]);
+
+  useEffect(() => {
     loadSavedJobs();
-  }, [isAuthenticated, token]);
+  }, [loadSavedJobs]);
 
   const toggleSaved = useCallback(
     async (jobId) => {
       if (!isAuthenticated || !token) {
-        throw new Error('User must be signed in to save jobs');
+        throw new Error('Please sign in to save jobs.');
       }
-
       const idStr = String(jobId);
       const isSaved = savedIds.has(idStr);
 
-      // Optimistic update
       setSavedIds((current) => {
         const next = new Set(current);
-        if (isSaved) {
-          next.delete(idStr);
-        } else {
-          next.add(idStr);
-        }
+        if (isSaved) next.delete(idStr);
+        else next.add(idStr);
         return next;
       });
 
       try {
         if (isSaved) {
-          // DELETE request to unsave
-          await api(`/v1/me/saved-jobs/${idStr}`, { method: 'DELETE' }, token);
+          await unsaveJob(idStr, token);
         } else {
-          // POST request to save
-          await api(`/v1/me/saved-jobs/${idStr}`, { method: 'POST', body: {} }, token);
+          await saveJob(idStr, token);
         }
       } catch (err) {
-        console.error('Failed to toggle saved job status on server, rolling back', err);
-        // Rollback on failure
         setSavedIds((current) => {
           const next = new Set(current);
-          if (isSaved) {
-            next.add(idStr); // Re-add if it was removed
-          } else {
-            next.delete(idStr); // Re-remove if it was added
-          }
+          if (isSaved) next.add(idStr);
+          else next.delete(idStr);
           return next;
         });
         throw err;
@@ -83,6 +73,7 @@ export function SavedJobsProvider({ children }) {
     loading,
     isSaved: (jobId) => savedIds.has(String(jobId)),
     toggleSaved,
+    reloadSavedJobs: loadSavedJobs,
   };
 
   return <SavedJobsContext.Provider value={value}>{children}</SavedJobsContext.Provider>;

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import useServiceCareJobs from '../../hooks/useServiceCareJobs.js';
 import SectionHeading from '../common/SectionHeading.jsx';
 import JobCard from './JobCard.jsx';
+import LoadingSpinner from '../common/LoadingSpinner.jsx';
 
 export default function FeaturedJobsSection() {
   const { jobs, loading, error } = useServiceCareJobs({ limit: 8 });
@@ -18,7 +19,7 @@ export default function FeaturedJobsSection() {
       />
 
       {loading && (
-        <p className="py-6 text-center text-sm text-brand-muted">Loading jobs...</p>
+        <LoadingSpinner className="py-6" label="Loading jobs..." />
       )}
 
       {error && (

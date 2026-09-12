@@ -5,6 +5,7 @@ export const EMPLOYER_PIPELINE_STAGES = [
   'Shortlisted',
   'Interview',
   'Offer',
+  'Hired',
   'Rejected',
 ];
 
@@ -14,6 +15,7 @@ export const SEEKER_TO_EMPLOYER_STAGE = {
   Interview: 'Interview',
   Offer: 'Offer',
   'Not Selected': 'Rejected',
+  Withdrawn: 'Withdrawn',
 };
 
 export const EMPLOYER_TO_SEEKER_STATUS = {
@@ -22,11 +24,14 @@ export const EMPLOYER_TO_SEEKER_STATUS = {
   Shortlisted: 'In Review',
   Interview: 'Interview',
   Offer: 'Offer',
+  Hired: 'Offer',
   Rejected: 'Not Selected',
+  Withdrawn: 'Withdrawn',
 };
 
 export function getNextPipelineStage(currentStage) {
-  const index = EMPLOYER_PIPELINE_STAGES.indexOf(currentStage);
-  if (index < 0 || index >= EMPLOYER_PIPELINE_STAGES.length - 2) return null;
-  return EMPLOYER_PIPELINE_STAGES[index + 1];
+  const linear = ['New', 'Reviewed', 'Shortlisted', 'Interview', 'Offer', 'Hired'];
+  const index = linear.indexOf(currentStage);
+  if (index < 0 || index >= linear.length - 1) return null;
+  return linear[index + 1];
 }

@@ -14,6 +14,7 @@ export default function EmployerSettingsPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [accountSaved, setAccountSaved] = useState(false);
+  const [accountError, setAccountError] = useState('');
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [notifications, setNotifications] = useState({
     newApplicants: true,
@@ -22,9 +23,10 @@ export default function EmployerSettingsPage() {
 
   const handleAccountSave = (event) => {
     event.preventDefault();
-    if (!email.trim() && !password) return;
-    setAccountSaved(true);
-    setPassword('');
+    setAccountSaved(false);
+    setAccountError(
+      'Email and password changes are not available on the shared API.',
+    );
   };
 
   const handleSignOut = () => {
@@ -33,14 +35,13 @@ export default function EmployerSettingsPage() {
   };
 
   const handleDeleteAccount = () => {
-    signOut();
-    navigate('/');
+    setAccountError('Deleting a company account is not available on the shared API.');
   };
 
   return (
     <>
       <DashboardTopBanner
-        eyebrow="Newcomer Jobline Dashboard"
+        eyebrow="IT Jobs Jobline Dashboard"
         title="Settings"
         subtitle="Manage your account, notifications, and team preferences."
       />
@@ -76,6 +77,7 @@ export default function EmployerSettingsPage() {
                 setAccountSaved(false);
               }}
             />
+            {accountError ? <p className="text-sm text-red-400">{accountError}</p> : null}
             {accountSaved ? (
               <p className="text-sm text-status-success">Account settings updated.</p>
             ) : null}

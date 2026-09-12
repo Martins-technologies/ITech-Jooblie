@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../lib/auth/AuthContext.jsx';
+import LoadingSpinner from '../common/LoadingSpinner.jsx';
 
 export default function RequireAuth({ role = 'seeker' }) {
   const { isAuthenticated, user, loading } = useAuth();
@@ -7,10 +8,7 @@ export default function RequireAuth({ role = 'seeker' }) {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-brand-bg text-brand-white">
-        <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-brand-accent border-t-transparent" />
-          <p className="mt-4 text-brand-muted">Loading...</p>
-        </div>
+        <LoadingSpinner label="Loading..." />
       </div>
     );
   }
@@ -19,7 +17,7 @@ export default function RequireAuth({ role = 'seeker' }) {
     return <Navigate to="/sign-in" replace />;
   }
 
-  const isEmployer = user?.role === 'employer' || user?.role === 'recruiter';
+  const isEmployer = user?.role === 'employer' || user?.role === 'recruiter' || user?.apiRole === 'admin';
 
   if (role === 'seeker' && isEmployer) {
     return <Navigate to="/employer-dashboard/overview" replace />;

@@ -1,30 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Send, AlertCircle, CheckCircle } from 'lucide-react';
-import { getMyCompanies, getServiceCareCategories, createEmployerJob } from '../lib/jobs.js';
+import { formatApiError } from '../lib/formValidation.js';
 import { useAuth } from '../lib/auth/AuthContext.jsx';
 import Card from '../components/common/Card.jsx';
 import Button from '../components/common/Button.jsx';
 import Checkbox from '../components/common/Checkbox.jsx';
+import LoadingSpinner from '../components/common/LoadingSpinner.jsx';
 
 const fieldClass =
   'w-full rounded-lg border border-white/10 bg-[#0c1220] px-3.5 py-2.5 text-sm text-white outline-none placeholder:text-brand-muted focus:border-brand-accent transition-colors';
 
 const PROVINCE_OPTIONS = [
-  { value: 'ON', label: 'Ontario' },
-  { value: 'BC', label: 'British Columbia' },
-  { value: 'QC', label: 'Quebec' },
-  { value: 'AB', label: 'Alberta' },
-  { value: 'MB', label: 'Manitoba' },
-  { value: 'NS', label: 'Nova Scotia' },
-  { value: 'NB', label: 'New Brunswick' },
-  { value: 'SK', label: 'Saskatchewan' },
-  { value: 'PE', label: 'Prince Edward Island' },
-  { value: 'NL', label: 'Newfoundland and Labrador' },
+  { value: 'Ontario', label: 'Ontario' },
+  { value: 'British Columbia', label: 'British Columbia' },
+  { value: 'Quebec', label: 'Quebec' },
+  { value: 'Alberta', label: 'Alberta' },
+  { value: 'Manitoba', label: 'Manitoba' },
+  { value: 'Nova Scotia', label: 'Nova Scotia' },
+  { value: 'New Brunswick', label: 'New Brunswick' },
+  { value: 'Saskatchewan', label: 'Saskatchewan' },
+  { value: 'Prince Edward Island', label: 'Prince Edward Island' },
+  { value: 'Newfoundland and Labrador', label: 'Newfoundland and Labrador' },
 ];
 
 export default function CreateJobPostPage() {
-  const { token, isAuthenticated, loading: authLoading } = useAuth();
+  const { token, isAuthenticated, loading: authLoading, user } = useAuth();
   const navigate = useNavigate();
 
   const [companies, setCompanies] = useState([]);
@@ -41,9 +42,9 @@ export default function CreateJobPostPage() {
     title: '',
     description: '',
     city: '',
-    province: 'ON',
+    province: 'Ontario',
     is_remote: false,
-    employment_type: 'full-time',
+    employment_type: 'full_time',
     salary_currency: 'CAD',
     salary_min: '',
     salary_max: '',
@@ -54,8 +55,10 @@ export default function CreateJobPostPage() {
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       navigate('/sign-in');
+    } else if (!authLoading && isAuthenticated && user?.role !== 'employer') {
+      navigate('/dashboard/overview');
     }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isAuthenticated, authLoading, navigate, user?.role]);
 
   // Load companies & categories
   useEffect(() => {
@@ -64,13 +67,11 @@ export default function CreateJobPostPage() {
       try {
         setLoading(true);
         const [rawCompanies, rawCategories] = await Promise.all([
-          getMyCompanies(token).catch(() => []),
-          getServiceCareCategories(),
+          getRecruiterCompanies(token).catch(() => []),
+          getPublicCategories(),
         ]);
 
-        const resolvedCompanies = rawCompanies && rawCompanies.length > 0
-          ? rawCompanies
-          : [{ id: 'mock-co-123', name: 'My IT Consulting Firm' }];
+        const resolvedCompanies = rawCompanies || [];
 
         setCompanies(resolvedCompanies);
         setCategories(rawCategories || []);
@@ -98,7 +99,7 @@ export default function CreateJobPostPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!isAuthenticated || !token) {
-      alert('Please sign in to post.');
+      setError('Please sign in to post.');
       return;
     }
 
@@ -120,16 +121,25 @@ export default function CreateJobPostPage() {
     setSuccessMessage(null);
 
     const payload = {
-      ...form,
+      company_id: form.company_id || undefined,
+      title: form.title,
       category_id: Number(form.category_id),
-      salary_min: Number(form.salary_min) || 0,
-      salary_max: Number(form.salary_max) || 0,
+      employment_type: form.employment_type,
+      description: form.description,
+      city: form.city,
+      province: form.province,
+      is_remote: form.is_remote,
+      workplace_type: form.is_remote ? 'remote' : 'onsite',
+      salary_min: Number(form.salary_min) || null,
+      salary_max: Number(form.salary_max) || null,
+      salary_currency: 'CAD',
+      salary_period: form.salary_period,
     };
 
     try {
-      const res = await createEmployerJob(payload, token);
+      const res = await createRecruiterJob(payload, token);
       setSuccessMessage(
-        `Job submitted successfully. Status: ${res?.status || 'pending review'}.`
+        `Job published successfully. Status: ${res?.job?.status || 'active'}.`
       );
       // Reset form
       setForm((prev) => ({
@@ -142,7 +152,7 @@ export default function CreateJobPostPage() {
       }));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-      setError(err.message || 'Failed to submit job posting. Please check your credentials.');
+      setError(formatApiError(err, 'Failed to submit job posting. Please check your credentials.'));
     } finally {
       setSubmitting(false);
     }
@@ -152,8 +162,7 @@ export default function CreateJobPostPage() {
     return (
       <section className="flex min-h-[60vh] items-center justify-center bg-brand-bg px-4 py-24 text-brand-white">
         <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-accent border-t-transparent mx-auto"></div>
-          <p className="mt-4 text-brand-muted">Loading posting form...</p>
+        <LoadingSpinner label="Loading posting form..." />
         </div>
       </section>
     );
@@ -312,8 +321,8 @@ export default function CreateJobPostPage() {
                   onChange={handleChange('employment_type')}
                   className={fieldClass}
                 >
-                  <option value="full-time">Full-Time</option>
-                  <option value="part-time">Part-Time</option>
+                  <option value="full_time">Full-Time</option>
+                  <option value="part_time">Part-Time</option>
                   <option value="contract">Contract</option>
                   <option value="internship">Internship</option>
                 </select>

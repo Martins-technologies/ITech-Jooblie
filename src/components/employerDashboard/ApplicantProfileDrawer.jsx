@@ -7,8 +7,17 @@ import ApplicantStageBadge from './ApplicantStageBadge.jsx';
 
 const stageOptions = EMPLOYER_PIPELINE_STAGES.map((stage) => ({ value: stage, label: stage }));
 
-export default function ApplicantProfileDrawer({ applicant, onClose, onStageChange, onNotesChange }) {
+export default function ApplicantProfileDrawer({
+  applicant,
+  onClose,
+  onStageChange,
+  onNotesChange,
+  onViewResume,
+}) {
   const [notes, setNotes] = useState(applicant?.notes || '');
+  const [noteMessage, setNoteMessage] = useState('');
+  const [resumeError, setResumeError] = useState('');
+  const [resumeLoading, setResumeLoading] = useState(false);
 
   useEffect(() => {
     setNotes(applicant?.notes || '');
@@ -16,9 +25,25 @@ export default function ApplicantProfileDrawer({ applicant, onClose, onStageChan
 
   if (!applicant) return null;
 
-  const handleNotesBlur = () => {
+  const handleNotesBlur = async () => {
     if (notes !== applicant.notes) {
-      onNotesChange?.(applicant.id, notes);
+      try {
+        await onNotesChange?.(applicant.id, notes);
+      } catch (err) {
+        setNoteMessage(err.message);
+      }
+    }
+  };
+
+  const handleViewResume = async () => {
+    setResumeError('');
+    setResumeLoading(true);
+    try {
+      await onViewResume?.();
+    } catch (err) {
+      setResumeError(err.message || 'Unable to open resume.');
+    } finally {
+      setResumeLoading(false);
     }
   };
 
@@ -77,8 +102,13 @@ export default function ApplicantProfileDrawer({ applicant, onClose, onStageChan
                   <FileText className="h-4 w-4 text-brand-accent" />
                   {applicant.resumeFilename}
                 </span>
-                <Button variant="outline" className="px-3 py-1.5 text-xs">
-                  View Resume
+                <Button
+                  variant="outline"
+                  className="px-3 py-1.5 text-xs"
+                  onClick={handleViewResume}
+                  disabled={resumeLoading}
+                >
+                  {resumeLoading ? 'Opening...' : 'View Resume'}
                 </Button>
               </div>
             </section>
@@ -170,6 +200,8 @@ export default function ApplicantProfileDrawer({ applicant, onClose, onStageChan
               placeholder="Private notes about this candidate..."
               className="mt-3 w-full rounded-lg border border-white/10 bg-brand-card/50 px-4 py-2.5 text-sm text-brand-white placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent"
             />
+            {noteMessage ? <p className="mt-2 text-xs text-red-400">{noteMessage}</p> : null}
+            {resumeError ? <p className="mt-2 text-xs text-red-400">{resumeError}</p> : null}
           </section>
         </div>
       </aside>

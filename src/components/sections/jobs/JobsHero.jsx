@@ -6,7 +6,7 @@ import JobSearchBar from './JobSearchBar.jsx';
 import QuickSearches from './QuickSearches.jsx';
 import StatCard from './StatCard.jsx';
 
-export default function JobsHero({ search }) {
+export default function JobsHero({ search, categoryOptions }) {
   return (
     <section className="page-hero relative overflow-hidden bg-brand-bg pb-10">
       <CanadaDotMap className="pointer-events-none absolute inset-0 h-full w-full opacity-20" />
@@ -44,6 +44,7 @@ export default function JobsHero({ search }) {
             draft={search.draft}
             onChange={search.update}
             onSubmit={search.submitSearch}
+            categoryOptions={categoryOptions}
           />
           <QuickSearches onSelect={search.searchFromKeyword} />
         </div>

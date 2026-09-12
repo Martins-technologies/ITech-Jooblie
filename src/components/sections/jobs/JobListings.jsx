@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Filter, X } from 'lucide-react';
-import { SIMULATED_TOTAL_JOBS } from '../../../data/mockJobs.js';
 import { sortJobs } from '../../../hooks/useJobFilters.js';
 import JobFilterSidebar from './JobFilterSidebar.jsx';
 import JobResultsHeader from './JobResultsHeader.jsx';
 import JobCard from './JobCard.jsx';
 import Pagination from './Pagination.jsx';
+import LoadingSpinner from '../../common/LoadingSpinner.jsx';
 
 export default function JobListings({ jobs, filters, loading, error }) {
   const [sortBy, setSortBy] = useState('recent');
@@ -59,9 +59,9 @@ export default function JobListings({ jobs, filters, loading, error }) {
             />
 
             {loading ? (
-              <p className="rounded-xl border border-brand-border/40 bg-brand-card p-8 text-center text-brand-muted">
-                Loading jobs...
-              </p>
+              <div className="rounded-xl border border-brand-border/40 bg-brand-card p-8">
+                <LoadingSpinner label="Loading jobs..." />
+              </div>
             ) : error ? (
               <p className="rounded-xl border border-red-400/40 bg-brand-card p-8 text-center text-red-400">
                 {error}

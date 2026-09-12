@@ -1,15 +1,10 @@
 import { Briefcase, Building2, DollarSign, MapPin } from 'lucide-react';
-import { jobTypeOptions, salaryRangeOptions } from '../../data/mockJobs.js';
-import { jobCategories } from '../../data/jobCategories.js';
+import { jobTypeOptions, salaryRangeOptions } from '../../data/jobFilterOptions.js';
 import Button from '../common/Button.jsx';
 import Card from '../common/Card.jsx';
 import Input from '../common/Input.jsx';
 import Select from '../common/Select.jsx';
-
-const categoryOptions = [
-  { value: '', label: 'Select job category' },
-  ...jobCategories.map((item) => ({ value: item.id, label: item.title })),
-];
+import InlineNotice from '../common/InlineNotice.jsx';
 
 export default function JobPostingForm({
   values,
@@ -19,7 +14,18 @@ export default function JobPostingForm({
   onSaveDraft,
   heading = 'Post a New Job',
   showCard = true,
+  categoryOptions = [],
+  formError,
+  submitting = false,
 }) {
+  const resolvedCategoryOptions = [
+    { value: '', label: 'Select job category' },
+    ...categoryOptions.map((item) => ({
+      value: String(item.id),
+      label: item.name || item.title || item.label,
+    })),
+  ];
+
   const formContent = (
     <form onSubmit={onSubmit} className="space-y-4" noValidate>
       <Input
@@ -36,13 +42,13 @@ export default function JobPostingForm({
         id="job-posting-company"
         name="company"
         label="Company Name"
-        required
         icon={Building2}
-        placeholder="Your company name"
+        placeholder="Bound from your recruiter company"
         value={values.company}
         onChange={update('company')}
         error={errors.company}
         autoComplete="organization"
+        disabled
       />
       <Input
         id="job-posting-location"
@@ -57,13 +63,13 @@ export default function JobPostingForm({
       />
       <Select
         id="job-posting-category"
-        name="category"
+        name="categoryId"
         label="Job Category"
         required
-        value={values.category}
-        onChange={update('category')}
+        value={values.categoryId || values.category || ''}
+        onChange={update('categoryId')}
         error={errors.category}
-        options={categoryOptions}
+        options={resolvedCategoryOptions}
       />
       <Select
         id="job-posting-type"
@@ -106,14 +112,15 @@ export default function JobPostingForm({
           <p className="mt-1 text-xs text-red-400">{errors.description}</p>
         ) : null}
       </div>
+      <InlineNotice tone="error">{formError}</InlineNotice>
       <div className="flex flex-col gap-3 sm:flex-row">
         {onSaveDraft ? (
           <Button type="button" variant="outline" className="flex-1" onClick={onSaveDraft}>
             Save as Draft
           </Button>
         ) : null}
-        <Button type="submit" variant="accent" className="flex-1">
-          Publish Job
+        <Button type="submit" variant="accent" className="flex-1" disabled={submitting}>
+          {submitting ? 'Publishing...' : 'Publish Job'}
         </Button>
       </div>
     </form>

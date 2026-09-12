@@ -8,7 +8,7 @@ import {
   workModelOptions,
   workModelChecks,
   salaryRangeOptions,
-} from '../../../data/mockJobs.js';
+} from '../../../data/jobFilterOptions.js';
 
 const fieldClass =
   'w-full rounded-lg border border-brand-border/40 bg-brand-bg px-3 py-2.5 text-sm text-brand-white outline-none placeholder:text-brand-muted focus-visible:ring-2 focus-visible:ring-brand-accent';

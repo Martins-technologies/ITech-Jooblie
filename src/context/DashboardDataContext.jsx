@@ -1,66 +1,42 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { mockApplications } from '../data/mockApplications.js';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useAuth } from '../lib/auth/AuthContext.jsx';
+import { useSavedJobs } from '../lib/SavedJobsContext.jsx';
+import {
+  applyToJob as applyToJobRequest,
+  getPublicCategories,
+  getRecommendedJobs,
+  getSeekerDashboard,
+  getSeekerResumes,
+  normalizeApplication,
+  normalizeJob,
+  normalizeSavedJob,
+  updateAuthProfile,
+} from '../lib/jobs.js';
+import {
+  educationFromApi,
+  educationToApi,
+  experienceFromApi,
+  experienceToApi,
+  splitProfileLocation,
+} from '../lib/mappers.js';
+import { formatApiError, validateJobApplicationReadiness, validateSeekerProfileForm } from '../lib/formValidation.js';
 
 const DashboardDataContext = createContext(null);
 
-const initialProfile = {
-  fullName: 'Alex Chen',
-  email: '',
-  phone: '416-555-0142',
-  location: 'Toronto, ON',
-  skills: ['JavaScript', 'Customer Service'],
-  experience: [
-    {
-      id: 'exp-1',
-      title: 'Retail Associate',
-      company: 'FreshMart',
-      dates: '2022 – 2024',
-      description: 'Helped customers and managed inventory.',
-    },
-  ],
-  education: [],
-};
-
-const initialSavedJobs = [
-  {
-    id: 'data-analyst-datainsight',
-    title: 'Data Analyst',
-    company: 'DataInsight Analytics',
-    location: 'Montreal, QC',
-    jobType: 'Full-Time',
-    workModel: 'Hybrid',
-    salaryLabel: '$70K – $95K / year',
-    salaryMin: 70,
-    salaryMax: 95,
-    postedAt: '2026-08-18T10:00:00Z',
-    postedLabel: '1 week ago',
-    verified: true,
-    category: 'data-analytics',
-    experience: 'Mid-Level',
-    keywords: ['Data Analyst'],
-    skills: ['SQL', 'Excel', 'Python'],
-  },
-];
-
-function normalizeJob(job) {
+function emptyProfile(user, apiProfile) {
+  const city = apiProfile?.location_city;
+  const province = apiProfile?.location_province;
   return {
-    id: String(job.id),
-    title: job.title,
-    company: job.company,
-    location: job.location,
-    jobType: job.jobType,
-    workModel: job.workModel,
-    salaryLabel: job.salaryLabel,
-    salaryMin: job.salaryMin,
-    salaryMax: job.salaryMax,
-    postedAt: job.postedAt,
-    postedLabel: job.postedLabel,
-    verified: job.verified,
-    category: job.category,
-    experience: job.experience,
-    keywords: job.keywords || [],
-    skills: job.skills || [],
+    fullName: apiProfile?.full_name || user?.full_name || '',
+    email: user?.email || apiProfile?.email || '',
+    phone: apiProfile?.phone || '',
+    location: [city, province].filter(Boolean).join(', '),
+    headline: apiProfile?.headline || '',
+    skills: apiProfile?.skills || [],
+    experience: experienceFromApi(apiProfile?.experience),
+    education: educationFromApi(apiProfile?.education),
+    defaultResumePath: apiProfile?.default_resume_path || '',
   };
 }
 
@@ -77,70 +53,182 @@ export function calculateProfileCompleteness(profile) {
 }
 
 export function DashboardDataProvider({ children }) {
-  const [applications, setApplications] = useState(mockApplications);
-  const [savedJobs, setSavedJobs] = useState(initialSavedJobs);
-  const [profile, setProfile] = useState(initialProfile);
+  const { token, user, profile: authProfile } = useAuth();
+  const { toggleSaved, isSaved, reloadSavedJobs } = useSavedJobs();
+  const [applications, setApplications] = useState([]);
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [recommendedJobs, setRecommendedJobs] = useState([]);
+  const [profile, setProfile] = useState(() => emptyProfile(user, authProfile));
+  const [resumes, setResumes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+  const [metrics, setMetrics] = useState({
+    applications: 0,
+    savedJobs: 0,
+    interviews: 0,
+    shortlisted: 0,
+    offers: 0,
+  });
 
-  const applyToJob = useCallback((job) => {
-    const normalized = normalizeJob(job);
-    setApplications((current) => {
-      if (current.some((app) => app.jobId === normalized.id)) return current;
-      return [
-        {
-          id: `app-${Date.now()}`,
-          jobId: normalized.id,
-          title: normalized.title,
-          company: normalized.company,
-          location: normalized.location,
-          status: 'Applied',
-          dateApplied: new Date().toISOString().slice(0, 10),
+  const refreshDashboard = useCallback(async () => {
+    if (!token) return;
+    setLoading(true);
+    setError('');
+    try {
+      const [dashboard, categories, recommended, resumeList] = await Promise.all([
+        getSeekerDashboard(token),
+        getPublicCategories().catch(() => []),
+        getRecommendedJobs(token, 6).catch(() => ({ items: [] })),
+        getSeekerResumes(token).catch(() => []),
+      ]);
+      setApplications((dashboard.applications || []).map(normalizeApplication));
+      setSavedJobs((dashboard.savedJobs || []).map((item) => normalizeSavedJob(item, categories)));
+      setRecommendedJobs((recommended.items || []).map((job) => normalizeJob(job, categories)));
+      setProfile(emptyProfile(user, dashboard.profile || authProfile));
+      setResumes(resumeList);
+      setMetrics(
+        dashboard.metrics || {
+          applications: 0,
+          savedJobs: 0,
+          interviews: 0,
+          shortlisted: 0,
+          offers: 0,
         },
-        ...current,
-      ];
-    });
+      );
+      await reloadSavedJobs();
+    } catch (err) {
+      setError(err.message || 'Failed to load your dashboard.');
+    } finally {
+      setLoading(false);
+    }
+  }, [token, user, authProfile, reloadSavedJobs]);
+
+  useEffect(() => {
+    refreshDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const applyToJob = useCallback(
+    async (job) => {
+      setNotice('');
+      setError('');
+
+      if (!token) {
+        const message = 'Sign in as a job seeker to apply.';
+        setError(message);
+        return { success: false, error: message };
+      }
+
+      const readiness = validateJobApplicationReadiness({ profile, resumes });
+      if (!readiness.ok) {
+        setError(readiness.message);
+        return {
+          success: false,
+          error: readiness.message,
+          hints: readiness.hints,
+          profileHref: readiness.profileHref,
+        };
+      }
+
+      try {
+        await applyToJobRequest(job.id, token, undefined, readiness.resumePath);
+        await refreshDashboard();
+        setNotice('Application submitted successfully.');
+        return { success: true };
+      } catch (err) {
+        const message = formatApiError(err, 'Unable to submit your application.');
+        setError(message);
+        return {
+          success: false,
+          error: message,
+          profileHref: err?.code === 'RESUME_REQUIRED' ? '/dashboard/profile' : undefined,
+        };
+      }
+    },
+    [token, profile, resumes, refreshDashboard],
+  );
+
+  const withdrawApplication = useCallback(async () => {
+    const message = 'Withdrawing an application is not available on the shared API yet.';
+    setError(message);
+    throw new Error(message);
   }, []);
 
-  const withdrawApplication = useCallback((applicationId) => {
-    setApplications((current) => current.filter((app) => app.id !== applicationId));
-  }, []);
+  const toggleSaveJob = useCallback(
+    async (job) => {
+      setError('');
+      await toggleSaved(job.id);
+      await refreshDashboard();
+    },
+    [toggleSaved, refreshDashboard],
+  );
 
-  const toggleSaveJob = useCallback((job) => {
-    const normalized = normalizeJob(job);
-    setSavedJobs((current) => {
-      const exists = current.some((item) => item.id === normalized.id);
-      if (exists) return current.filter((item) => item.id !== normalized.id);
-      return [normalized, ...current];
-    });
-  }, []);
-
-  const removeSavedJob = useCallback((jobId) => {
-    setSavedJobs((current) => current.filter((job) => job.id !== String(jobId)));
-  }, []);
+  const removeSavedJob = useCallback(
+    async (jobId) => {
+      setError('');
+      if (isSaved(jobId)) {
+        await toggleSaved(jobId);
+        await refreshDashboard();
+      }
+    },
+    [isSaved, toggleSaved, refreshDashboard],
+  );
 
   const isJobApplied = useCallback(
     (jobId) => applications.some((app) => app.jobId === String(jobId)),
     [applications],
   );
 
-  const isJobSaved = useCallback(
-    (jobId) => savedJobs.some((job) => job.id === String(jobId)),
-    [savedJobs],
+  const isJobSaved = useCallback((jobId) => isSaved(jobId), [isSaved]);
+
+  const updateProfile = useCallback(
+    async (data) => {
+      setError('');
+      setNotice('');
+      const fieldErrors = validateSeekerProfileForm(data);
+      if (Object.keys(fieldErrors).length) {
+        const message = Object.values(fieldErrors)[0];
+        setError(message);
+        throw new Error(message);
+      }
+      const location = splitProfileLocation(data.location);
+      const payload = {
+        full_name: data.fullName,
+        phone: data.phone || null,
+        headline: data.headline || null,
+        location_province: location.location_province,
+        location_city: location.location_city,
+        skills: data.skills || [],
+        experience: experienceToApi(data.experience),
+        education: educationToApi(data.education),
+      };
+      if (data.defaultResumePath) {
+        payload.default_resume_path = data.defaultResumePath;
+      }
+      try {
+        const res = await updateAuthProfile(token, payload);
+        setProfile(emptyProfile(user, res.profile));
+        setNotice('Your profile has been saved.');
+        return res.profile;
+      } catch (err) {
+        const message = formatApiError(err, 'Unable to save profile.');
+        setError(message);
+        throw new Error(message);
+      }
+    },
+    [token, user],
   );
 
-  const updateProfile = useCallback((data) => {
-    setProfile((current) => ({ ...current, ...data }));
-  }, []);
-
-  const stats = useMemo(() => {
-    const interviews = applications.filter((app) => app.status === 'Interview').length;
-    const offers = applications.filter((app) => app.status === 'Offer').length;
-    return {
-      applications: applications.length,
-      savedJobs: savedJobs.length,
-      interviews,
-      offers,
-    };
-  }, [applications, savedJobs]);
+  const stats = useMemo(
+    () => ({
+      applications: metrics.applications ?? applications.length,
+      savedJobs: metrics.savedJobs ?? savedJobs.length,
+      interviews: metrics.interviews ?? applications.filter((app) => app.status === 'Interview').length,
+      offers: metrics.offers ?? applications.filter((app) => app.status === 'Offer').length,
+    }),
+    [metrics, applications, savedJobs],
+  );
 
   const profileCompleteness = useMemo(() => calculateProfileCompleteness(profile), [profile]);
 
@@ -148,9 +236,16 @@ export function DashboardDataProvider({ children }) {
     () => ({
       applications,
       savedJobs,
+      recommendedJobs,
       profile,
+      resumes,
       stats,
       profileCompleteness,
+      loading,
+      error,
+      notice,
+      setError,
+      setNotice,
       applyToJob,
       withdrawApplication,
       toggleSaveJob,
@@ -158,13 +253,19 @@ export function DashboardDataProvider({ children }) {
       isJobApplied,
       isJobSaved,
       updateProfile,
+      refreshDashboard,
     }),
     [
       applications,
       savedJobs,
+      recommendedJobs,
       profile,
+      resumes,
       stats,
       profileCompleteness,
+      loading,
+      error,
+      notice,
       applyToJob,
       withdrawApplication,
       toggleSaveJob,
@@ -172,6 +273,7 @@ export function DashboardDataProvider({ children }) {
       isJobApplied,
       isJobSaved,
       updateProfile,
+      refreshDashboard,
     ],
   );
 

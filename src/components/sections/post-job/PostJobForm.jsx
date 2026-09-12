@@ -1,6 +1,8 @@
 import { Briefcase, Building2, DollarSign, Lock, MapPin, Send } from 'lucide-react';
-import { jobTypeOptions, salaryRangeOptions } from '../../../data/mockJobs.js';
+import { jobTypeOptions, salaryRangeOptions } from '../../../data/jobFilterOptions.js';
 import usePostJobForm from '../../../hooks/usePostJobForm.js';
+import { useAuth } from '../../../lib/auth/AuthContext.jsx';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../common/Button.jsx';
 import Card from '../../common/Card.jsx';
 import IconBadge from '../../common/IconBadge.jsx';
@@ -8,7 +10,15 @@ import Input from '../../common/Input.jsx';
 import Select from '../../common/Select.jsx';
 
 export default function PostJobForm() {
-  const { values, errors, submitted, update, handleSubmit, resetSubmitted } = usePostJobForm();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
+  const { values, errors, submitted, update, handleSubmit, resetSubmitted } = usePostJobForm(() => {
+    if (!isAuthenticated || user?.role !== 'employer') {
+      navigate('/sign-in');
+      return;
+    }
+    navigate('/employer-dashboard/post-a-job');
+  });
 
   return (
     <Card hover={false} className="scroll-mt-24 p-6 shadow-card md:p-8" id="post-job-form">
@@ -20,8 +30,7 @@ export default function PostJobForm() {
       {submitted ? (
         <div className="space-y-4">
           <p className="rounded-lg border border-brand-accent/40 bg-brand-accent/10 p-4 text-sm text-brand-white">
-            Your job details were captured. A live posting API will be connected in a future
-            module — for now this confirmation is local only.
+            Your job details were captured locally as a starting point. Continue in the employer dashboard to publish through the API.
           </p>
           <Button type="button" variant="outline" className="w-full" onClick={resetSubmitted}>
             Post another job
