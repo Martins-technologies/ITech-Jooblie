@@ -22,7 +22,7 @@ export default function CompanyProfilePage() {
         {notice}
       </InlineNotice>
 
-      <Card hover={false} className="p-6 md:p-8 max-w-2xl">
+      <Card hover={false} className="w-full max-w-2xl p-4 sm:p-6 md:p-8">
         <CompanyProfileForm profile={companyProfile} onSave={updateCompanyProfile} loading={loading} />
       </Card>
     </>

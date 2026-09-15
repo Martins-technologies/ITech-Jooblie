@@ -16,7 +16,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-brand-bg">
-      <div className="container-page grid h-[72px] grid-cols-[1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
+      <div className="container-page grid h-16 min-w-0 grid-cols-[1fr_auto] items-center gap-3 sm:h-[72px] sm:gap-4 md:grid-cols-[1fr_auto_1fr]">
         <Logo size="md" className="justify-self-start" />
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
