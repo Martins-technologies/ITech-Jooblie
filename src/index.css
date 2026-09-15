@@ -5,10 +5,18 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
 
   body {
     @apply bg-brand-bg font-sans text-brand-white antialiased;
+    overflow-x: clip;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
   }
 
   ::selection {
@@ -29,7 +37,7 @@
 
 @layer components {
   .container-page {
-    @apply mx-auto w-full max-w-7xl px-6 sm:px-12 md:px-16 lg:px-24;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-8 md:px-12 lg:px-24;
   }
 
   /* Shared gap between the sticky navbar and every page hero */

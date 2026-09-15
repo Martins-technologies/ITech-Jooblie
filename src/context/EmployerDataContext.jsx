@@ -4,6 +4,7 @@ import { getNextPipelineStage } from '../data/pipelineStages.js';
 import { useAuth } from '../lib/auth/AuthContext.jsx';
 import {
   createRecruiterCompany,
+  updateRecruiterCompany,
   createRecruiterJob,
   getApplicationResumeUrl,
   getJobApplications,
@@ -50,6 +51,22 @@ function mapCompany(company) {
     registrationNumber: company.registration_number || '',
     verificationStatus: company.verification_status || '',
   };
+}
+
+function companyFormToApiPayload(data) {
+  const payload = {
+    name: data.name?.trim(),
+    registration_number: (data.registrationNumber || data.registration_number || '').trim(),
+  };
+  const description = data.description?.trim();
+  if (description) {
+    payload.description = description;
+  }
+  const websiteRaw = data.website?.trim();
+  if (websiteRaw) {
+    payload.website = websiteRaw.startsWith('http') ? websiteRaw : `https://${websiteRaw}`;
+  }
+  return payload;
 }
 
 function postingToPayload(data, companyId) {
@@ -231,21 +248,24 @@ export function EmployerDataProvider({ children }) {
     async (data) => {
       setError('');
       setNotice('');
-      if (!companyProfile.id) {
-        const res = await createRecruiterCompany(token, {
-          name: data.name,
-          website: data.website,
-          registration_number: data.registrationNumber || data.registration_number,
-          description: data.description || undefined,
-        });
+      const payload = companyFormToApiPayload(data);
+      try {
+        if (!companyProfile.id) {
+          const res = await createRecruiterCompany(token, payload);
+          setCompanyProfile(mapCompany(res.company));
+          setNotice('Company created.');
+          await refreshDashboard();
+          return;
+        }
+        const res = await updateRecruiterCompany(companyProfile.id, payload, token);
         setCompanyProfile(mapCompany(res.company));
-        setNotice('Company created.');
+        setNotice('Company profile updated successfully.');
         await refreshDashboard();
-        return;
+      } catch (err) {
+        const message = formatApiError(err, 'Unable to save company profile.');
+        setError(message);
+        throw new Error(message);
       }
-      const message = 'Updating an existing company profile is not available on the shared API yet.';
-      setError(message);
-      throw new Error(message);
     },
     [companyProfile.id, token, refreshDashboard],
   );

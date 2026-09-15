@@ -13,15 +13,15 @@ export default function DashboardLayout({ variant = 'seeker' }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-white">
+    <div className="min-h-screen overflow-x-clip bg-brand-bg text-brand-white">
       <DashboardSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         {...sidebarProps}
       />
-      <div className="lg:pl-64">
+      <div className="min-w-0 lg:pl-64">
         <DashboardMobileHeader onMenuOpen={() => setSidebarOpen(true)} />
-        <main className="p-4 md:p-6 lg:p-8">
+        <main className="min-w-0 max-w-full p-4 sm:p-5 md:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

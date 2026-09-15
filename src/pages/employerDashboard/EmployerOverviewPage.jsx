@@ -66,7 +66,7 @@ export default function EmployerOverviewPage() {
           <EmployerStatCardRow stats={stats} />
 
           <section className="mb-8">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-lg font-bold text-brand-white">Recent Applicants</h2>
               <Link
                 to="/employer-dashboard/applicants"
@@ -94,7 +94,7 @@ export default function EmployerOverviewPage() {
           </section>
 
           <section>
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-lg font-bold text-brand-white">Your Active Job Postings</h2>
               <Link
                 to="/employer-dashboard/job-postings"

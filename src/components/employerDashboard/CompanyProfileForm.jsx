@@ -158,7 +158,7 @@ export default function CompanyProfileForm({ profile, onSave }) {
       {saved ? (
         <p className="text-sm text-status-success">Company profile saved successfully.</p>
       ) : null}
-      <Button type="submit" variant="accent" disabled={saving}>
+      <Button type="submit" variant="accent" className="w-full sm:w-auto" disabled={saving}>
         {saving ? 'Saving...' : 'Save Changes'}
       </Button>
     </form>

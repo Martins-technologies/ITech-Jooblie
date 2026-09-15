@@ -115,7 +115,7 @@ export default function RecruiterHome() {
         )}
 
         {/* Aggregate Counters */}
-        <div className="mb-8 grid gap-4 grid-cols-3">
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatsCard
             icon={Briefcase}
             label="Active Positions"

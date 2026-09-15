@@ -110,6 +110,10 @@ export async function createRecruiterCompany(token, payload) {
   return api('recruiter/companies', { method: 'POST', body: payload }, token);
 }
 
+export async function updateRecruiterCompany(companyId, payload, token) {
+  return api(`recruiter/companies/${companyId}`, { method: 'PATCH', body: payload }, token);
+}
+
 export async function createRecruiterJob(payload, token) {
   return api('recruiter/jobs', { method: 'POST', body: payload }, token);
 }
