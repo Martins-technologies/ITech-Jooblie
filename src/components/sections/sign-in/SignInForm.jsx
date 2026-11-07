@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { ArrowRight, Briefcase, Eye, EyeOff, Lock, Mail, User, Building2, Globe } from 'lucide-react';
 import { signInRoles } from '../../../data/signInContent.js';
 import useSignInForm from '../../../hooks/useSignInForm.js';
@@ -153,12 +152,12 @@ export default function SignInForm({ onSuccess }) {
               checked={values.remember}
               onChange={update('remember')}
             />
-            <Link
-              to="/contact"
+            <a
+              href="https://www.jooblie.com/forgot-password"
               className="text-sm font-semibold text-brand-accent hover:text-brand-accentHover focus-visible:ring-2 focus-visible:ring-brand-accent"
             >
               Forgot password?
-            </Link>
+            </a>
           </div>
         ) : null}
 
